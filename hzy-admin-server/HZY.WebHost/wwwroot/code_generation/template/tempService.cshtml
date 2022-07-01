@@ -1,0 +1,150 @@
+﻿@using HZY.Infrastructure;
+@using FreeSql.DatabaseModel;
+@model HZY.Models.DTO.DevelopmentTool.GenDbTableDto
+@{
+    var className = Model.EntityName;
+    var classNameRemark = Model.DisplayName;
+
+    var ignores = new string[] { 
+        "Id", 
+        "CreationTime",
+        "CreatorUserId", 
+        "LastModificationTime",
+        "LastModifierUserId" ,
+        "DeletionTime",
+        "DeleterUserId", 
+        "IsDeleted" 
+    };
+
+    var tableInfos = Model.TableInfos
+        .Where(w => !ignores.Contains(w.ColumnName))
+        .OrderBy(w => w.Position)
+        .ToList()
+        ;
+    var searchKeyWords = new[] {"Title", "Name", "Phone", "Address", "Email"};
+    var searchKeyWord = string.Empty;
+    foreach (var item in searchKeyWords)
+    {
+        if (tableInfos.Any(w => w.ColumnName == item))
+        {
+            searchKeyWord = item;
+            break;
+        }
+    }
+}
+<pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
+
+using HzyEFCoreRepositories.Extensions;
+
+using @(Model.Namespace).Domain.Services.Accounts;
+using @(Model.Namespace).Domain.Services.Upload;
+using @(Model.Namespace).EFCore.PagingViews;
+using @(Model.Namespace).EFCore.Repositories.Core;
+using @(Model.Namespace).Infrastructure;
+using @(Model.Namespace).Models.DTO;
+using @(Model.Namespace).Models.Entities;
+using @(Model.Namespace).Models.Entities.Framework;
+using @(Model.Namespace).Services.Admin.Core;
+using @(Model.Namespace).Services.Admin.Framework;
+
+namespace @(Model.Namespace).Services.Admin
+{
+    /// <summary>
+    /// @(classNameRemark) 服务 @(className)Service
+    /// </summary>
+    public class @(className)Service : AdminBaseService<IAdminRepository<@(className)>>
+    {
+        public @(className)Service(IAdminRepository<@(className)> defaultRepository) 
+            : base(defaultRepository)
+        {
+
+        }
+
+        /// <summary>
+        /// 获取列表数据
+        /// </summary>
+        /// <param name="page">page</param>
+        /// <param name="size">size</param>
+        /// <param name="search">search</param>
+        /// <returns></returns>
+        public async Task<@("PagingView")> FindListAsync(int page, int size, @(className) search)
+        {
+            var query = this._defaultRepository.Select
+                    @if (!string.IsNullOrWhiteSpace(searchKeyWord))
+                    {
+<pre>.WhereIf(!string.IsNullOrWhiteSpace(search?.@(searchKeyWord)), w => w.@(searchKeyWord).Contains(search.@(searchKeyWord)))</pre>
+                    }
+                    .OrderByDescending(w => w.CreationTime)
+                    .Select(w => new
+                    {
+                        w.Id,
+                        @(string.Join(',', tableInfos.Select(w => "w." + w.ColumnName)))@(",")
+                        LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
+                        CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
+                    })
+                ;
+
+            var result = await this._defaultRepository.AsPagingViewAsync(query, page, size);
+            // result.Column(query, w => w.OrganizationName).Mapping<SysOrganization>(w => w.Name);
+            // result.Column(query, w => w.OrganizationName).Mapping(title:"所属组织");
+            return result;
+        }
+
+        /// <summary>
+        /// 根据id数组删除
+        /// </summary>
+        /// <param name="ids">ids</param>
+        /// <returns></returns>
+        public async Task DeleteListAsync(List<@("Guid")> ids)
+        {
+            await this._defaultRepository.DeleteByIdsAsync(ids);
+        }
+
+        /// <summary>
+        /// 查询表单数据
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<@("Dictionary")<@("string,object")>> FindFormAsync(Guid id)
+        {
+            var res = new Dictionary<@("string, object")>();
+            var form = await this._defaultRepository.FindByIdAsync(id);
+            form = form.NullSafe();
+
+            res[nameof(id)] = id == Guid.Empty ? "" : id;
+            res[nameof(form)] = form;
+            return res;
+        }
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        /// <param name="form">form</param>
+        /// <returns></returns>
+        public Task<@(className)> SaveFormAsync(@className form)
+        {
+            return this._defaultRepository.InsertOrUpdateAsync(form);
+        }
+
+        /// <summary>
+        /// 导出Excel
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public async Task<@("byte[]")> ExportExcelAsync(@className search)
+        {
+            var tableViewModel = await this.FindListAsync(0, 0, search);
+            return this.ExportExcelByPagingView(tableViewModel, null, "Id");
+        }
+
+
+
+    }
+}
+</pre>

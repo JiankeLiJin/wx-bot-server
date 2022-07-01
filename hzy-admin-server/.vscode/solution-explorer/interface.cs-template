@@ -1,0 +1,5 @@
+﻿namespace {{namespace}};
+
+public interface {{name}}
+{
+}
