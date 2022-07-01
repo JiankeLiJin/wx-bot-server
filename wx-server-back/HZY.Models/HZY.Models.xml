@@ -1240,5 +1240,35 @@
             账户Id
             </summary>
         </member>
+        <member name="T:HZY.Models.Entities.WxTimedTask">
+            <summary>
+            微信机器人定时任务
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.ApplicationToken">
+            <summary>
+             应用Token => 备注: 应用Token
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.ReceivingObjectId">
+            <summary>
+             接受对象(联系人Id) => 备注: 接受对象(联系人Id)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.SendType">
+            <summary>
+             发送类型 => 备注: 发送类型
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.SendContent">
+            <summary>
+             发送内容(发送类型为文本时生效) => 备注: 发送内容(发送类型为文本时生效)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.SendTime">
+            <summary>
+             发送时间(cron表达式) => 备注: 发送时间(cron表达式)
+            </summary>
+        </member>
     </members>
 </doc>

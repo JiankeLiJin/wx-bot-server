@@ -948,5 +948,47 @@
             <param name="search"></param>
             <returns></returns>
         </member>
+        <member name="T:HZY.Services.Admin.WxTimedTaskService">
+            <summary>
+            微信机器人定时任务 服务 WxTimedTaskService
+            </summary>
+        </member>
+        <member name="M:HZY.Services.Admin.WxTimedTaskService.FindListAsync(System.Int32,System.Int32,HZY.Models.Entities.WxTimedTask)">
+            <summary>
+            获取列表数据
+            </summary>
+            <param name="page">page</param>
+            <param name="size">size</param>
+            <param name="search">search</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxTimedTaskService.DeleteListAsync(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            根据id数组删除
+            </summary>
+            <param name="ids">ids</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxTimedTaskService.FindFormAsync(System.Guid)">
+            <summary>
+            查询表单数据
+            </summary>
+            <param name="id">id</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxTimedTaskService.SaveFormAsync(HZY.Models.Entities.WxTimedTask)">
+            <summary>
+            保存数据
+            </summary>
+            <param name="form">form</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxTimedTaskService.ExportExcelAsync(HZY.Models.Entities.WxTimedTask)">
+            <summary>
+            导出Excel
+            </summary>
+            <param name="search"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

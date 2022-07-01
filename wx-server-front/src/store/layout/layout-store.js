@@ -10,7 +10,7 @@ const layoutStore = defineStore("layout-store", () => {
     //定义状态
     let state = reactive({
         loading: false,
-        title: 'hzy-admin-spa-ui',
+        title: '微信机器人管理平台',
         isMobile: false,
         // 鉴定是否移动设备分界值
         demarcation: 1080

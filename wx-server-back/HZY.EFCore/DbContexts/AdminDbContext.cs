@@ -62,6 +62,10 @@ public class AdminDbContext : DbContextBase
 
     #endregion
 
+    #region 微信机器人
+    public DbSet<WxTimedTask> WxTimedTask { get; set; }
+    #endregion
+
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
