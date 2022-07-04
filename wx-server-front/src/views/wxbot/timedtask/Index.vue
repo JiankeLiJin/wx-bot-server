@@ -149,7 +149,7 @@ const methods = {
     methods.findList();
   },
   //重置检索条件
-  onResetSearch() {
+ onResetSearch() {
     state.page = 1;
     let searchVm = state.search.vm;
     for (let key in searchVm) {

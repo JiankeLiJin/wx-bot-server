@@ -73,6 +73,15 @@ const appStore = defineStore("app-store", () => {
     function setUserInfo(userInfo) {
         state.userInfo = userInfo;
     }
+    /**
+     * 获取ApplicationToken
+     * 
+     * @returns 
+     */
+    function getApplicationToken() {
+        console.log(state.userInfo);
+        return state.userInfo.id;
+    }
 
     /**
      * 获取用户信息 与 菜单
@@ -143,7 +152,8 @@ const appStore = defineStore("app-store", () => {
         getUserInfo,
         refreshUserInfo,
         getPowerByMenuId,
-        resetInfo
+        resetInfo,
+        getApplicationToken,
     }
 
 });

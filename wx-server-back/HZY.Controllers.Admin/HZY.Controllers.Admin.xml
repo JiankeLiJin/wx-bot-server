@@ -700,6 +700,45 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:HZY.Controllers.Admin.WxBotConfigController">
+            <summary>
+            微信联系人 控制器
+            </summary>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxBotConfigController.FindFormAsync">
+            <summary>
+            查询表单数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxBotConfigController.SaveFormAsync(HZY.Models.Entities.WxBotConfig)">
+            <summary>
+            保存
+            </summary>
+            <param name="form">form</param>
+            <returns></returns>
+        </member>
+        <member name="T:HZY.Controllers.Admin.WxContactController">
+            <summary>
+            微信联系人 控制器
+            </summary>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxContactController.FindListAsync(System.Int32,System.Int32,HZY.Models.Entities.WxContact)">
+            <summary>
+            获取列表
+            </summary>
+            <param name="size">size</param>
+            <param name="page">page</param>
+            <param name="search">search</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxContactController.SaveFormAsync(HZY.Models.Entities.WxContact)">
+            <summary>
+            保存
+            </summary>
+            <param name="form">form</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.Controllers.Admin.WxTimedTaskController">
             <summary>
             微信机器人定时任务 控制器

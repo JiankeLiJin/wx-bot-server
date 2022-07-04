@@ -39,8 +39,8 @@ import tools from "@/scripts/tools";
 import loginService from "@/service/system/loginService";
 
 const state = reactive({
-  userName: "admin",
-  userPassword: "123456",
+  userName: "zhouli",
+  userPassword: "9901226619ll",
 });
 const inputPassword = ref(null);
 const loading = ref(false);

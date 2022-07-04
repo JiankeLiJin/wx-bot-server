@@ -948,6 +948,45 @@
             <param name="search"></param>
             <returns></returns>
         </member>
+        <member name="T:HZY.Services.Admin.WxBotConfigService">
+            <summary>
+            微信联系人 服务 WxBotConfigService
+            </summary>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBotConfigService.FindFormAsync">
+            <summary>
+            查询表单数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBotConfigService.SaveFormAsync(HZY.Models.Entities.WxBotConfig)">
+            <summary>
+            保存数据
+            </summary>
+            <param name="form">form</param>
+            <returns></returns>
+        </member>
+        <member name="T:HZY.Services.Admin.WxContactService">
+            <summary>
+            微信联系人 服务 WxContactService
+            </summary>
+        </member>
+        <member name="M:HZY.Services.Admin.WxContactService.FindListAsync(System.Int32,System.Int32,HZY.Models.Entities.WxContact)">
+            <summary>
+            获取列表数据
+            </summary>
+            <param name="page">page</param>
+            <param name="size">size</param>
+            <param name="search">search</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxContactService.SaveFormAsync(HZY.Models.Entities.WxContact)">
+            <summary>
+            保存更新联系人
+            </summary>
+            <param name="form">form</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.Services.Admin.WxTimedTaskService">
             <summary>
             微信机器人定时任务 服务 WxTimedTaskService

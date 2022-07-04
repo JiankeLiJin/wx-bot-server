@@ -1240,6 +1240,91 @@
             账户Id
             </summary>
         </member>
+        <member name="T:HZY.Models.Entities.WxBotConfig">
+            <summary>
+            微信联系人
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.ApplicationToken">
+            <summary>
+             应用Token => 备注: 应用Token
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.GroupAutoReplyFlag">
+            <summary>
+             群聊自动回复是否开启 => 备注: 群聊自动回复是否开启
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.TalkPrivateAutoReplyFlag">
+            <summary>
+             私聊自动回复是否开启 => 备注: 私聊自动回复是否开启
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.ReplyBotType">
+            <summary>
+             回复机器人类型 => 备注: 回复机器人类型
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.TianXingApiKey">
+            <summary>
+             天行机器人key => 备注: 天行机器人key
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.TencentSecretId">
+            <summary>
+             腾讯TencentSecretId => 备注: 腾讯TencentSecretId
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.TencentSecretKey">
+            <summary>
+             腾讯TencentSecretKey => 备注: 腾讯TencentSecretKey
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxBotConfig.UserId">
+            <summary>
+             所属用户id => 备注: 所属用户id
+            </summary>
+        </member>
+        <member name="T:HZY.Models.Entities.WxContact">
+            <summary>
+            微信联系人
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.ApplicationToken">
+            <summary>
+             应用Token => 备注: 应用Token
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.WxId">
+            <summary>
+             微信id => 备注: 微信id
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.WxCode">
+            <summary>
+             微信Code => 备注: 微信Code
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.Name">
+            <summary>
+             微信昵称 => 备注: 微信昵称
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.Alias">
+            <summary>
+             昵称 => 备注: 昵称
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.Gender">
+            <summary>
+             性别 => 备注: 性别
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxContact.AvatarUrl">
+            <summary>
+             头像 => 备注: 头像
+            </summary>
+        </member>
         <member name="T:HZY.Models.Entities.WxTimedTask">
             <summary>
             微信机器人定时任务

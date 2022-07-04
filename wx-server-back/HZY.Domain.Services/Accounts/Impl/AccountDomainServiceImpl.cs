@@ -4,6 +4,7 @@ using HZY.Infrastructure.ApiResultManage;
 using HZY.Infrastructure.Token;
 using HZY.Models.BO;
 using HZY.Models.Consts;
+using HZY.Models.Entities;
 using HZY.Models.Entities.Framework;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -28,6 +29,7 @@ public class AccountDomainServiceImpl : IAccountDomainService
     private readonly IAdminRepository<SysRole> _sysRoleRepository;
     private readonly IAdminRepository<SysPost> _sysPostRepository;
     private readonly IAdminRepository<SysUserPost> _sysUserPostRepository;
+    private readonly IAdminRepository<WxBotConfig> _WxBotConfigRepository;
 
     public AccountDomainServiceImpl(IAdminRepository<SysUser> sysUserRepository,
         IAdminRepository<SysOrganization> sysOrganizationRepository,
@@ -37,7 +39,8 @@ public class AccountDomainServiceImpl : IAccountDomainService
         IAdminRepository<SysUserRole> sysUserRoleRepository,
         IAdminRepository<SysRole> sysRoleRepository,
         IAdminRepository<SysPost> sysPostRepository,
-        IAdminRepository<SysUserPost> sysUserPostRepository)
+        IAdminRepository<SysUserPost> sysUserPostRepository,
+        IAdminRepository<WxBotConfig> WxBotConfigRepository)
     {
         _sysUserRepository = sysUserRepository;
         _appConfiguration = appConfiguration;
@@ -48,7 +51,7 @@ public class AccountDomainServiceImpl : IAccountDomainService
         _sysRoleRepository = sysRoleRepository;
         _sysPostRepository = sysPostRepository;
         _sysUserPostRepository = sysUserPostRepository;
-
+        _WxBotConfigRepository = WxBotConfigRepository;
         this._accountInfo = this.FindAccountInfoByToken();
     }
 
@@ -96,7 +99,6 @@ public class AccountDomainServiceImpl : IAccountDomainService
         accountInfo.SysRoles = sysRoles;
         accountInfo.SysPosts = sysPosts;
         accountInfo.SysOrganization = sysOrganization;
-
         //缓存
         return this.SetCacheByAccountInfo(accountInfo);
     }
