@@ -26,4 +26,5 @@ RUN dotnet publish "HZY.WebHost.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "HZY.WebHost.dll","--server.urls","http://*:9901"]
+ENV ASPNETCORE_URLS=http://+:9901
+ENTRYPOINT ["dotnet", "HZY.WebHost.dll"]
