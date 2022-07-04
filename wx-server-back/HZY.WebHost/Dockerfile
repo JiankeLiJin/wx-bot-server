@@ -23,7 +23,7 @@ RUN dotnet build "HZY.WebHost.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "HZY.WebHost.csproj" -c Release -o /app/publish
 
-ENV ASPNETCORE_URLS=http://*:9901
+ENV ASPNETCORE_URLS=http://+:9901
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
