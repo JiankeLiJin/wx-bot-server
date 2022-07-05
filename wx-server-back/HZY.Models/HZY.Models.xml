@@ -1335,9 +1335,14 @@
              应用Token => 备注: 应用Token
             </summary>
         </member>
-        <member name="P:HZY.Models.Entities.WxTimedTask.ReceivingObjectId">
+        <member name="P:HZY.Models.Entities.WxTimedTask.ReceivingObjectWxId">
             <summary>
-             接受对象(联系人Id) => 备注: 接受对象(联系人Id)
+             接受对象(WxId) => 备注: 接受对象(联系人Id)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.ReceivingObjectName">
+            <summary>
+             接受对象(WxId) => 备注: 接受对象(联系人Id)
             </summary>
         </member>
         <member name="P:HZY.Models.Entities.WxTimedTask.SendType">

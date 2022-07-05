@@ -11,7 +11,7 @@ public class FrameworkBaseService<TRepository> : IScopedSelfDependency where TRe
     /// <summary>
     /// 默认 仓储
     /// </summary>
-    protected readonly TRepository _defaultRepository;
+    public readonly TRepository _defaultRepository;
 
     public FrameworkBaseService(TRepository defaultRepository)
     {

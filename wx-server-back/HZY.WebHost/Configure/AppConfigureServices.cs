@@ -58,6 +58,8 @@ public class AppConfigureServices
 
         services.AddSingleton<IHostedService, LifetimeEventsHostedService>();
 
+        services.AddScoped<ApiWxBotTokenFilterAttribute>();
+
         #endregion;
 
         #region razor page 处理

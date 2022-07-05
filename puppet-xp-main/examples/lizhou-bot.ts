@@ -16,19 +16,30 @@
  *   limitations under the License.
  *
  */
-import type * as PUPPET   from 'wechaty-puppet'
+import type * as PUPPET from 'wechaty-puppet'
 
 import {
   PuppetXp,
-}               from '../src/mod.js'
+} from '../src/mod.js'
 
 import qrcodeTerminal from 'qrcode-terminal'
+// @ts-ignore
+import schedule from 'node-schedule'
+// @ts-ignore
+import rp from 'request-promise'
 
 /**
  * 变量定义
  * @type {string}
  */
- let userInfo = "";
+let userInfo = "";
+
+/**
+* 常量定义
+* @type {string}
+*/
+const WECHAT_URL = 'http://localhost:5600/api/public/wx-client';// 服务器host
+const APPLICTION_TOKEN = "08da5d97-da10-498f-881f-4eb6f415f76a";//平台KEY
 
 /**
  *
@@ -45,9 +56,9 @@ const puppet = new PuppetXp()
 
 puppet
   .on('logout', onLogout)
-  .on('login',  onLogin)
-  .on('scan',   onScan)
-  .on('error',  onError)
+  .on('login', onLogin)
+  .on('scan', onScan)
+  .on('error', onError)
   .on('message', onMessage)
 
 /**
@@ -74,7 +85,7 @@ puppet.start()
  *  `scan`, `login`, `logout`, `error`, and `message`
  *
  */
-function onScan (payload: PUPPET.payloads.EventScan) {
+function onScan(payload: PUPPET.payloads.EventScan) {
   if (payload.qrcode) {
     const qrcodeImageUrl = [
       'https://wechaty.js.org/qrcode/',
@@ -89,16 +100,16 @@ function onScan (payload: PUPPET.payloads.EventScan) {
   }
 }
 
-function onLogin (payload: PUPPET.payloads.EventLogin) {
+function onLogin(payload: PUPPET.payloads.EventLogin) {
   console.info(`${payload.contactId} login`)
-  handle_get_person()
+  handleGetPerson()
 }
 
-function onLogout (payload: PUPPET.payloads.EventLogout) {
+function onLogout(payload: PUPPET.payloads.EventLogout) {
   console.info(`${payload.contactId} logouted`)
 }
 
-function onError (payload: PUPPET.payloads.EventError) {
+function onError(payload: PUPPET.payloads.EventError) {
   console.error('Bot error:', payload.data)
   /*
   if (bot.logonoff()) {
@@ -113,9 +124,10 @@ function onError (payload: PUPPET.payloads.EventError) {
  *    dealing with Messages.
  *
  */
-async function onMessage ({
+async function onMessage({
   messageId,
 }: PUPPET.payloads.EventMessage) {
+  return;
   const {
     talkerId,
     roomId,
@@ -133,7 +145,7 @@ async function onMessage ({
       console.log("收到一条图片消息");
       break;
     case 7:
-      console.log({talkerId, roomId,text,type});
+      console.log({ talkerId, roomId, text, type });
       break;
     case 15:
       console.log("收到一条视频消息");
@@ -145,51 +157,150 @@ async function onMessage ({
   let wxid = talkerId;
   let room = roomId;
   let content = text;
-  handle_recv_msg({wxid, content,room});
+  handleRecvMsg({ wxid, content, room });
 }
 
 /**
  * 获取用户信息处理函数
  */
- async function handle_get_person(){
+async function handleGetPerson() {
   // @ts-ignore
   userInfo = JSON.parse(await puppet.sidecar.getMyselfInfo());
   // @ts-ignore
-  if(userInfo.id ==null || userInfo.id == undefined){
+  if (userInfo.id == null || userInfo.id == undefined) {
     console.log("获取账号信息失败");
     // @ts-ignore
     await puppet.logout();
     return;
-  }else {
-    console.log("获取用户信息失败");
+  } else {
+    console.log("获取用户信息成功");
   }
+  console.log("用户信息:", userInfo);
+
+  //上传用户信息
+
+  //上传联系人
+  // @ts-ignore
+  const wxContacts = JSON.parse(await puppet.sidecar.getContact())
+  await updateContacts(wxContacts);
   // @ts-ignore
   console.info(`小助手<${userInfo.name}>登录了`);
+
 }
 /**
  * 消息处理函数
  * @param j
  */
 // @ts-ignore
-async function handle_recv_msg(j){
+async function handleRecvMsg(j) {
   let content = j.content;
 
   //判断是群消息还是个人消息
-  if(j.room != null && j.room != ''){
+  if (j.room != null && j.room != '') {
     // @ts-ignore
     let mentionSelf = content.includes(`@${userInfo.wxName}`);
     //判断是否是@我的消息
     if (mentionSelf) {
       content = content.replace(/@[^,，：:\s@]+/g, '').trim();
-      console.log("消息内容：",content);
+      console.log("消息内容：", content);
     }
   }
-  else{
+  else {
     //个人消息
 
   }
+}
+/**
+ * 上传联系人
+ * @param contacts 微信联系人
+ */
+async function updateContacts(contacts) {
+  console.log(`联系人有${contacts.length}个`);
+  let res = await PostRequest(WECHAT_URL + `/save-contacts/${APPLICTION_TOKEN}`, contacts.map(c => ({
+    wxId: c.id,
+    wxCode: c.code,
+    name: c.name,
+    alias: c.alias,
+    avatarUrl: c.avatarUrl,
+    gender: c.gender
 
-  
+  })));
+  if (res && res.code == 1) {
+    console.log("上传联系人成功!,响应结果:", res);
+  }
+  else {
+ 
+    console.log("上传联系人失败!,响应结果:", res);
+  }
+}
+
+
+/**
+ * post请求
+ * @param url
+ * @param paraStr
+ * @constructor
+ */
+// @ts-ignore
+async function PostRequest(url, paraStr) {
+  try {
+    var options = {
+      method: 'POST',
+      uri: url,
+      body: paraStr,
+      json: true // Automatically stringifies the body to JSON
+    };
+    let data = await rp(options);
+    // console.log("post请求成功");
+    return data;
+  } catch (e) {
+    console.log("post请求请求失败:", e);
+    return;
+  }
+}
+
+/**
+ * get请求
+ * @param url
+ * @returns {Promise<void>}
+ * @constructor
+ */
+// @ts-ignore
+async function GetRequest(url) {
+  try {
+    var options = {
+      uri: url,
+      qs: {
+        access_token: 'xxxxx xxxxx' // -> uri + '?access_token=xxxxx%20xxxxx'
+      },
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true // Automatically parses the JSON string in the response
+    };
+    let data = await rp(options);
+    // console.log("get请求成功");
+    return data;
+  } catch (e) {
+    // console.log("get请求失败");
+    return;
+  }
+
+}
+
+/**
+ * 设置定时器
+ * @param date
+ * @param callback
+ * @param name
+ */
+// @ts-ignore
+function setLocalSchedule(date, callback, name) {
+  if (name) {
+    schedule.scheduleJob(name, { rule: date, tz: 'Asia/Shanghai' }, callback)
+  } else {
+    schedule.scheduleJob({ rule: date, tz: 'Asia/Shanghai' }, callback)
+  }
 }
 
 

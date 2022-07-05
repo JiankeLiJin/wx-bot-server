@@ -732,11 +732,10 @@
             <param name="search">search</param>
             <returns></returns>
         </member>
-        <member name="M:HZY.Controllers.Admin.WxContactController.SaveFormAsync(HZY.Models.Entities.WxContact)">
+        <member name="M:HZY.Controllers.Admin.WxContactController.FindAllAsync">
             <summary>
-            保存
+            获取所有联系人
             </summary>
-            <param name="form">form</param>
             <returns></returns>
         </member>
         <member name="T:HZY.Controllers.Admin.WxTimedTaskController">

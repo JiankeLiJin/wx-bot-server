@@ -966,10 +966,23 @@
             <param name="form">form</param>
             <returns></returns>
         </member>
+        <member name="M:HZY.Services.Admin.WxBotConfigService.GetWxBotConfigAsync(System.String)">
+            <summary>
+            获取微信机器人配置
+            </summary>
+            <param name="applicationToken">应用token</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.Services.Admin.WxContactService">
             <summary>
             微信联系人 服务 WxContactService
             </summary>
+        </member>
+        <member name="M:HZY.Services.Admin.WxContactService.FindAllAsync">
+            <summary>
+            获取所有联系人
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:HZY.Services.Admin.WxContactService.FindListAsync(System.Int32,System.Int32,HZY.Models.Entities.WxContact)">
             <summary>
@@ -985,6 +998,14 @@
             保存更新联系人
             </summary>
             <param name="form">form</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxContactService.SaveContactsAsync(System.Collections.Generic.List{HZY.Models.Entities.WxContact},System.String)">
+            <summary>
+            保存更新联系人
+            </summary>
+            <param name="contacts">微信联系人</param>
+            <param name="applicationToken">应用token</param>
             <returns></returns>
         </member>
         <member name="T:HZY.Services.Admin.WxTimedTaskService">

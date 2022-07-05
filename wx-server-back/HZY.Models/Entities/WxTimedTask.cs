@@ -18,9 +18,14 @@ namespace HZY.Models.Entities
 
 
         /// <summary>
-        ///  接受对象(联系人Id) => 备注: 接受对象(联系人Id)
+        ///  接受对象(WxId) => 备注: 接受对象(联系人Id)
         /// </summary>
-        public String ReceivingObjectId { get; set; }
+        public String ReceivingObjectWxId { get; set; }
+
+        /// <summary>
+        ///  接受对象(WxId) => 备注: 接受对象(联系人Id)
+        /// </summary>
+        public String ReceivingObjectName { get; set; }
 
 
         /// <summary>

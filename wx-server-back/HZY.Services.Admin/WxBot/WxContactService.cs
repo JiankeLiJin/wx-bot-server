@@ -17,6 +17,8 @@ using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
+using HZY.Models.BO;
+using HZY.EFCore.Aop;
 
 namespace HZY.Services.Admin
 {
@@ -25,10 +27,20 @@ namespace HZY.Services.Admin
     /// </summary>
     public class WxContactService : AdminBaseService<IAdminRepository<WxContact>>
     {
-        public WxContactService(IAdminRepository<WxContact> defaultRepository) 
+        private readonly AccountInfo _accountInfo;
+        public WxContactService(IAdminRepository<WxContact> defaultRepository,
+            IAccountDomainService accountService)
             : base(defaultRepository)
         {
-
+            this._accountInfo = accountService.GetAccountInfo();
+        }
+        /// <summary>
+        /// 获取所有联系人
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<WxContact>> FindAllAsync()
+        {
+            return await _defaultRepository.ToListAsync(wxContact => wxContact.ApplicationToken == _accountInfo.Id.ToStr());
         }
 
         /// <summary>
@@ -46,7 +58,13 @@ namespace HZY.Services.Admin
                     .Select(w => new
                     {
                         w.Id,
-                        w.ApplicationToken,w.WxId,w.WxCode,w.Name,w.Alias,w.Gender,w.AvatarUrl,
+                        w.ApplicationToken,
+                        w.WxId,
+                        w.WxCode,
+                        w.Name,
+                        w.Alias,
+                        w.Gender,
+                        w.AvatarUrl,
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
                         CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
                     })
@@ -68,6 +86,23 @@ namespace HZY.Services.Admin
         {
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
+
+        /// <summary>
+        /// 保存更新联系人
+        /// </summary>
+        /// <param name="contacts">微信联系人</param>
+        /// <param name="applicationToken">应用token</param>
+        /// <returns></returns>
+        [Transactional]
+        public async virtual Task<int> SaveContactsAsync(List<WxContact> contacts, string applicationToken)
+        {
+            contacts.ForEach(c => c.ApplicationToken = applicationToken);
+            //先删除
+            await _defaultRepository.DeleteAsync(d => d.ApplicationToken == applicationToken);
+          //插入
+            return await this._defaultRepository.InsertRangeAsync(contacts);
+        }
+
 
     }
 }

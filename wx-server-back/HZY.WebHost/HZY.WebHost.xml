@@ -72,6 +72,26 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:HZY.WebHost.Controllers.Public.WxClientController">
+            <summary>
+            微信机器人客户端接口控制器
+            </summary>
+        </member>
+        <member name="M:HZY.WebHost.Controllers.Public.WxClientController.SaveContactsAsync(System.Collections.Generic.List{HZY.Models.Entities.WxContact},System.String)">
+            <summary>
+            保存微信联系人
+            </summary>
+            <param name="contacts">微信联系人</param>
+            <param name="applicationToken">应用token</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.WebHost.Controllers.Public.WxClientController.GetWxBotConfigAsync(System.String)">
+            <summary>
+            获取微信机器人配置
+            </summary>
+            <param name="applicationToken">应用token</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.WebHost.Filters.ApiAuthorizationFilter">
             <summary>
             授权认证 拦截
@@ -83,6 +103,17 @@
             </summary>
         </member>
         <member name="M:HZY.WebHost.Filters.ApiPermissionFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            action 执行之前
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:HZY.WebHost.Filters.ApiWxBotTokenFilterAttribute">
+            <summary>
+            微信 AppToken验证合法验证过滤器
+            </summary>
+        </member>
+        <member name="M:HZY.WebHost.Filters.ApiWxBotTokenFilterAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
             <summary>
             action 执行之前
             </summary>

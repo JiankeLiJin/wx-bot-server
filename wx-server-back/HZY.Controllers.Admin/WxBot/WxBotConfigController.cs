@@ -26,7 +26,7 @@ namespace HZY.Controllers.Admin
     /// <summary>
     /// 微信联系人 控制器
     /// </summary>
-    [ControllerDescriptor(MenuId = "请设置菜单Id 系统菜单表中查找", DisplayName = "微信联系人")]
+    [ControllerDescriptor(MenuId = "39", DisplayName = "微信联系人")]
     public class WxBotConfigController : AdminBaseController<WxBotConfigService>
     {
         public WxBotConfigController(WxBotConfigService defaultService) 

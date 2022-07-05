@@ -64,6 +64,8 @@ public class AdminDbContext : DbContextBase
 
     #region 微信机器人
     public DbSet<WxTimedTask> WxTimedTask { get; set; }
+    public DbSet<WxBotConfig> WxBotConfig { get; set; }
+    public DbSet<WxContact> WxContact { get; set; }
     #endregion
 
     #endregion

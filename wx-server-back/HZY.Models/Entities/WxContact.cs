@@ -43,7 +43,7 @@ namespace HZY.Models.Entities
             /// <summary>
             ///  性别 => 备注: 性别
             /// </summary>
-            public SByte? Gender { get; set; }
+            public Int32 Gender { get; set; }
             
             
             /// <summary>

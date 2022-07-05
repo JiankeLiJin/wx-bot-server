@@ -26,15 +26,15 @@ namespace HZY.Controllers.Admin
     /// <summary>
     /// 微信联系人 控制器
     /// </summary>
-    [ControllerDescriptor(MenuId = "请设置菜单Id 系统菜单表中查找", DisplayName = "微信联系人")]
+    [ControllerDescriptor(MenuId = "41", DisplayName = "微信联系人")]
     public class WxContactController : AdminBaseController<WxContactService>
     {
-        public WxContactController(WxContactService defaultService) 
+        public WxContactController(WxContactService defaultService)
             : base(defaultService)
         {
 
         }
-        
+
         /// <summary>
         /// 获取列表
         /// </summary>
@@ -48,19 +48,15 @@ namespace HZY.Controllers.Admin
         {
             return this._defaultService.FindListAsync(page, size, search);
         }
-
-
         /// <summary>
-        /// 保存
+        /// 获取所有联系人
         /// </summary>
-        /// <param name="form">form</param>
         /// <returns></returns>
-        [ActionDescriptor(DisplayName = "保存/编辑数据")]
-        [ApiCheckModel]
-        [HttpPost("SaveForm")]
-        public Task<WxContact> SaveFormAsync([FromBody] WxContact form)
+        [ActionDescriptor(AdminFunctionConsts.Function_Display, DisplayName = "获取所有联系人")]
+        [HttpPost("findAll")]
+        public async Task<List<WxContact>> FindAllAsync()
         {
-            return this._defaultService.SaveFormAsync(form);
+            return await this._defaultService.FindAllAsync();
         }
 
     }

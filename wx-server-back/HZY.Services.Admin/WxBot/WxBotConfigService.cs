@@ -58,6 +58,14 @@ namespace HZY.Services.Admin
         {
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
-
+        /// <summary>
+        /// 获取微信机器人配置
+        /// </summary>
+        /// <param name="applicationToken">应用token</param>
+        /// <returns></returns>
+        public async Task<string> GetWxBotConfigAsync(string applicationToken)
+        {
+            return await Task.FromResult("");
+        }
     }
 }

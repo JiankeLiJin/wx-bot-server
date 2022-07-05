@@ -25,10 +25,11 @@ namespace HZY.Services.Admin
     /// </summary>
     public class WxTimedTaskService : AdminBaseService<IAdminRepository<WxTimedTask>>
     {
-        public WxTimedTaskService(IAdminRepository<WxTimedTask> defaultRepository) 
+        private readonly WxContactService _wxContactService;
+        public WxTimedTaskService(IAdminRepository<WxTimedTask> defaultRepository, WxContactService wxContactService)
             : base(defaultRepository)
         {
-
+            this._wxContactService = wxContactService;
         }
 
         /// <summary>
@@ -40,12 +41,22 @@ namespace HZY.Services.Admin
         /// <returns></returns>
         public async Task<PagingView> FindListAsync(int page, int size, WxTimedTask search)
         {
+            //var query1 = (from task in this._defaultRepository.Select.OrderByDescending(w => w.CreationTime)
+            //              from contact in this._wxContactService._defaultRepository.Select.Where(w => w.Id == task.).DefaultIfEmpty()
+            //              select new { t1 = member, t2 = user }
+            //    ).qu;
+
             var query = this._defaultRepository.Select
                     .OrderByDescending(w => w.CreationTime)
                     .Select(w => new
                     {
                         w.Id,
-                        w.ApplicationToken,w.ReceivingObjectId,w.SendType,w.SendContent,w.SendTime,
+                        w.ApplicationToken,
+                        w.ReceivingObjectWxId,
+                        w.ReceivingObjectName,
+                        w.SendType,
+                        w.SendContent,
+                        w.SendTime,
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
                         CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
                     })
@@ -72,14 +83,20 @@ namespace HZY.Services.Admin
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        public async Task<Dictionary<string,object>> FindFormAsync(Guid id)
+        public async Task<Dictionary<string, object>> FindFormAsync(Guid id)
         {
             var res = new Dictionary<string, object>();
             var form = await this._defaultRepository.FindByIdAsync(id);
             form = form.NullSafe();
-
+            var receivingObjectWxIds = form.ReceivingObjectWxId?.Split(",");
+            var receivingObjectNames = form.ReceivingObjectName?.Split(",");
             res[nameof(id)] = id == Guid.Empty ? "" : id;
             res[nameof(form)] = form;
+            res["receivingObjects"] = receivingObjectWxIds?.Select((t, index) => new
+            {
+                value = t,
+                label = receivingObjectNames?[index]
+            });
             return res;
         }
 

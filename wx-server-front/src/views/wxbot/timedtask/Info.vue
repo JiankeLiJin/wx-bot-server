@@ -21,17 +21,23 @@
       <a-form layout="vertical" :model="state.vm.form">
         <a-row :gutter="[15, 15]">
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <a-form-item label="接受对象(联系人Id)">
-              <a-input
-                v-model:value="state.vm.form.receivingObjectId"
-                placeholder="请输入 接受对象(联系人Id)"
+            <a-form-item label="接收对象" name="receivingObjects">
+              <a-select
+                v-model:value="state.vm.receivingObjects"
+                mode="multiple"
+                style="width: 100%"
+                :labelInValue="true"
+                :showArrow="true"
+                placeholder="请选择接收对象"
+                :options="state.wxContactList"
+                optionFilterProp="label"
               />
             </a-form-item>
           </a-col>
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <a-form-item label="发送类型">
               <a-select
-                 placeholder="请选择 发送类型"
+                placeholder="请选择 发送类型"
                 ref="select"
                 v-model:value="state.vm.form.sendType"
                 style="width: 200px"
@@ -54,11 +60,12 @@
             </a-form-item>
           </a-col>
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <a-form-item label="发送时间(cron表达式)">
+            <a-form-item label="发送时间(cron表达式)" name="sendTime">
               <a-input
                 v-model:value="state.vm.form.sendTime"
                 placeholder="请输入 发送时间(cron表达式)"
               />
+              <a href="https://www.bejson.com/othertools/cron/">生成cron</a>
             </a-form-item>
           </a-col>
         </a-row>
@@ -68,9 +75,10 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import tools from "@/scripts/tools";
 import service from "@/service/wxbot/wxTimedTaskService";
+import wxContactService from "@/service/wxbot/wxContactService";
 import { useAppStore } from "@/store";
 
 //定义组件事件
@@ -83,6 +91,7 @@ const state = reactive({
   },
   visible: false,
   saveLoading: false,
+  wxContactList: [],
 });
 
 const methods = {
@@ -92,12 +101,26 @@ const methods = {
       state.saveLoading = false;
       if (res.code != 1) return;
       state.vm = res.data;
+      if (state.vm.receivingObjects == null) {
+        state.vm.receivingObjects = [];
+      }
     });
   },
   saveForm() {
+    console.log(state.vm.receivingObjects);
+    if (!state.vm.receivingObjects || !state.vm.receivingObjects.length > 0)
+      return tools.message("接收对象必填!", "警告");
+    if (!state.vm.form.sendTime) return tools.message("发送时间必填!", "警告");
+    if (!state.vm.form.sendType) return tools.message("发送类型必填!", "警告");
     state.saveLoading = true;
     state.vm.form.applicationToken = appStore.getApplicationToken();
-    console.log(state.vm.form);
+    state.vm.form.receivingObjectWxId = state.vm.receivingObjects
+      .map((r) => r.value)
+      .join(",");
+    state.vm.form.receivingObjectName = state.vm.receivingObjects
+      .map((r) => r.label)
+      .join(",");
+    console.log("保存对象：", state.vm.form);
     service.saveForm(state.vm.form).then((res) => {
       state.saveLoading = false;
       if (res.code != 1) return;
@@ -114,9 +137,25 @@ const methods = {
       methods.findForm();
     }
   },
+  //加载联系人
+  loadContactList() {
+    wxContactService.findAll().then((res) => {
+      if (res.data) {
+        state.wxContactList = res.data.map((r) => ({
+          value: r.wxId,
+          label: r.alias ? r.alias : r.name,
+          key: r.wxId,
+        }));
+      }
+    });
+  },
 };
 // 暴露函数或者属性到外部
 defineExpose({ ...methods });
+onMounted(() => {
+  //获取联系人
+  methods.loadContactList();
+});
 </script>
 <style lang="less" scoped>
 .ant-form-item {
