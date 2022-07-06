@@ -46,7 +46,6 @@ public class MemberService : AdminBaseService<IAdminRepository<Member>>
     public async Task<PagingView> FindListAsync(int page, int size, Member search)
     {
         var accountInfo = _accountService.GetAccountInfo();
-
         var query = (
                     from member in this._defaultRepository.QueryByDataAuthority(accountInfo)
                     from user in this._sysUserRepository.Select.Where(w => w.Id == member.UserId).DefaultIfEmpty()

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HZY.Models.Entities.BaseEntitys;
+using HZY.Models.Enums;
 
 namespace HZY.Models.Entities
 {
@@ -31,7 +32,7 @@ namespace HZY.Models.Entities
         /// <summary>
         ///  发送类型 => 备注: 发送类型
         /// </summary>
-        public String SendType { get; set; }
+        public ETimedTaskSendType SendType { get; set; }
 
 
         /// <summary>

@@ -1262,7 +1262,7 @@
         </member>
         <member name="P:HZY.Models.Entities.WxBotConfig.ReplyBotType">
             <summary>
-             回复机器人类型 => 备注: 回复机器人类型
+             回复机器人类型(1=天行机器人,2=腾讯闲聊机器人) => 备注: 回复机器人类型(1=天行机器人,2=腾讯闲聊机器人)
             </summary>
         </member>
         <member name="P:HZY.Models.Entities.WxBotConfig.TianXingApiKey">
@@ -1278,11 +1278,6 @@
         <member name="P:HZY.Models.Entities.WxBotConfig.TencentSecretKey">
             <summary>
              腾讯TencentSecretKey => 备注: 腾讯TencentSecretKey
-            </summary>
-        </member>
-        <member name="P:HZY.Models.Entities.WxBotConfig.UserId">
-            <summary>
-             所属用户id => 备注: 所属用户id
             </summary>
         </member>
         <member name="T:HZY.Models.Entities.WxContact">
@@ -1325,6 +1320,41 @@
              头像 => 备注: 头像
             </summary>
         </member>
+        <member name="T:HZY.Models.Entities.WxKeywordReply">
+            <summary>
+            关键词回复表
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxKeywordReply.ApplicationToken">
+            <summary>
+             应用Token => 备注: 应用Token
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxKeywordReply.SendType">
+            <summary>
+             发送类型 => 备注: 发送类型
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxKeywordReply.SendContent">
+            <summary>
+             发送内容(发送类型为文本时生效) => 备注: 发送内容(发送类型为文本时生效)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxKeywordReply.TakeEffectType">
+            <summary>
+             生效类型 => 备注: 生效类型
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxKeywordReply.KeyWord">
+            <summary>
+             关键词 => 备注: 关键词
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxKeywordReply.MatchType">
+            <summary>
+             匹配类型(模糊匹配,精确匹配) => 备注: 匹配类型(模糊匹配,精确匹配)
+            </summary>
+        </member>
         <member name="T:HZY.Models.Entities.WxTimedTask">
             <summary>
             微信机器人定时任务
@@ -1358,6 +1388,23 @@
         <member name="P:HZY.Models.Entities.WxTimedTask.SendTime">
             <summary>
              发送时间(cron表达式) => 备注: 发送时间(cron表达式)
+            </summary>
+        </member>
+        <member name="T:HZY.Models.Enums.ETimedTaskSendType">
+            <summary>
+            定时任务发送类型 枚举
+            </summary>
+        </member>
+        <member name="M:HZY.Models.Enums.ETimedTaskSendTypeEX.GetDescription(HZY.Models.Enums.ETimedTaskSendType)">
+            <summary>
+            获取枚举描述
+            </summary>
+            <param name="taskSendType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HZY.Models.Enums.EWxBotType">
+            <summary>
+            聊天机器人类型 枚举
             </summary>
         </member>
     </members>

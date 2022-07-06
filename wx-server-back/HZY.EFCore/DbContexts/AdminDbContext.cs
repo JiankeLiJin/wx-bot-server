@@ -93,6 +93,10 @@ public class AdminDbContext : DbContextBase
         }
 
         #endregion
+
+        modelBuilder.Entity<WxTimedTask>().ToTable("wx_timed_task");
+        modelBuilder.Entity<WxBotConfig>().ToTable("wx_bot_config");
+        modelBuilder.Entity<WxContact>().ToTable("wx_contact");
     }
 
 

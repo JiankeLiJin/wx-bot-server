@@ -38,15 +38,14 @@
             <a-form-item label="发送类型">
               <a-select
                 placeholder="请选择 发送类型"
-                ref="select"
                 v-model:value="state.vm.form.sendType"
                 style="width: 200px"
               >
-                <a-select-option value="WBNR">文本内容</a-select-option>
-                <a-select-option value="XWZX">新闻咨询</a-select-option>
-                <a-select-option value="ZXYQ">最新疫情</a-select-option>
-                <a-select-option value="TWQH">土味情话</a-select-option>
-                <a-select-option value="XHDQ">笑话大全</a-select-option>
+                <a-select-option :value="1">文本内容</a-select-option>
+                <a-select-option :value="2">新闻咨询</a-select-option>
+                <a-select-option :value="3">最新疫情</a-select-option>
+                <a-select-option :value="4">土味情话</a-select-option>
+                <a-select-option :value="5">笑话大全</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -65,7 +64,7 @@
                 v-model:value="state.vm.form.sendTime"
                 placeholder="请输入 发送时间(cron表达式)"
               />
-              <a href="https://www.bejson.com/othertools/cron/">生成cron</a>
+              <a target="_blank" href="https://www.bejson.com/othertools/cron/">生成cron</a>
             </a-form-item>
           </a-col>
         </a-row>
@@ -107,7 +106,7 @@ const methods = {
     });
   },
   saveForm() {
-    console.log(state.vm.receivingObjects);
+    console.log(state.vm.form.sendType);
     if (!state.vm.receivingObjects || !state.vm.receivingObjects.length > 0)
       return tools.message("接收对象必填!", "警告");
     if (!state.vm.form.sendTime) return tools.message("发送时间必填!", "警告");

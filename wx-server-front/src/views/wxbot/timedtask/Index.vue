@@ -70,10 +70,7 @@
       <template #table-col-default>
           <vxe-column field="receivingObjectWxId" title="接收对象wxId" show-overflow tree-node width="200"></vxe-column>
            <vxe-column field="receivingObjectName" title="接收对象" show-overflow tree-node width="200"></vxe-column>
-          <vxe-column field="sendType" title="发送类型" width="80">
-             <template #default="{ text: row  }">
-                     {{row.sendType}}2222222
-             </template>
+          <vxe-column field="sendTypeText" title="发送类型" width="80">
           </vxe-column>
           <vxe-column field="sendContent" title="发送内容" show-overflow min-width="220"></vxe-column>
           <vxe-column field="sendTime" title="发送时间(cron表达式)" show-overflow width="250"></vxe-column>

@@ -55,6 +55,7 @@ namespace HZY.Services.Admin
                         w.ReceivingObjectWxId,
                         w.ReceivingObjectName,
                         w.SendType,
+                        SendTypeText= w.SendType.ToDescriptionOrString(),
                         w.SendContent,
                         w.SendTime,
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),

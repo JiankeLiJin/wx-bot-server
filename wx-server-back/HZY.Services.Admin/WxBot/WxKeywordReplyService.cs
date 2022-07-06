@@ -17,30 +17,18 @@ using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
-using HZY.Models.BO;
-using HZY.EFCore.Aop;
 
 namespace HZY.Services.Admin
 {
     /// <summary>
-    /// 微信联系人 服务 WxContactService
+    /// 关键词回复表 服务 WxKeywordReplyService
     /// </summary>
-    public class WxContactService : AdminBaseService<IAdminRepository<WxContact>>
+    public class WxKeywordReplyService : AdminBaseService<IAdminRepository<WxKeywordReply>>
     {
-        private readonly AccountInfo _accountInfo;
-        public WxContactService(IAdminRepository<WxContact> defaultRepository,
-            IAccountDomainService accountService)
+        public WxKeywordReplyService(IAdminRepository<WxKeywordReply> defaultRepository) 
             : base(defaultRepository)
         {
-            this._accountInfo = accountService.GetAccountInfo();
-        }
-        /// <summary>
-        /// 获取所有联系人
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<WxContact>> FindAllAsync()
-        {
-            return await _defaultRepository.ToListAsync(wxContact => wxContact.ApplicationToken == _accountInfo.Id.ToStr());
+
         }
 
         /// <summary>
@@ -50,21 +38,14 @@ namespace HZY.Services.Admin
         /// <param name="size">size</param>
         /// <param name="search">search</param>
         /// <returns></returns>
-        public async Task<PagingView> FindListAsync(int page, int size, WxContact search)
+        public async Task<PagingView> FindListAsync(int page, int size, WxKeywordReply search)
         {
             var query = this._defaultRepository.Select
-.WhereIf(!string.IsNullOrWhiteSpace(search?.Name), w => w.Name.Contains(search.Name))
                     .OrderByDescending(w => w.CreationTime)
                     .Select(w => new
                     {
                         w.Id,
-                        w.ApplicationToken,
-                        w.WxId,
-                        w.WxCode,
-                        w.Name,
-                        w.Alias,
-                        w.Gender,
-                        w.AvatarUrl,
+                        w.ApplicationToken,w.SendType,w.SendContent,w.TakeEffectType,w.KeyWord,w.MatchType,
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
                         CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
                     })
@@ -76,32 +57,53 @@ namespace HZY.Services.Admin
             return result;
         }
 
+        /// <summary>
+        /// 根据id数组删除
+        /// </summary>
+        /// <param name="ids">ids</param>
+        /// <returns></returns>
+        public async Task DeleteListAsync(List<Guid> ids)
+        {
+            await this._defaultRepository.DeleteByIdsAsync(ids);
+        }
 
         /// <summary>
-        /// 保存更新联系人
+        /// 查询表单数据
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<Dictionary<string,object>> FindFormAsync(Guid id)
+        {
+            var res = new Dictionary<string, object>();
+            var form = await this._defaultRepository.FindByIdAsync(id);
+            form = form.NullSafe();
+
+            res[nameof(id)] = id == Guid.Empty ? "" : id;
+            res[nameof(form)] = form;
+            return res;
+        }
+
+        /// <summary>
+        /// 保存数据
         /// </summary>
         /// <param name="form">form</param>
         /// <returns></returns>
-        public Task<WxContact> SaveFormAsync(WxContact form)
+        public Task<WxKeywordReply> SaveFormAsync(WxKeywordReply form)
         {
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
 
         /// <summary>
-        /// 保存更新联系人
+        /// 导出Excel
         /// </summary>
-        /// <param name="contacts">微信联系人</param>
-        /// <param name="applicationToken">应用token</param>
+        /// <param name="search"></param>
         /// <returns></returns>
-        [Transactional]
-        public async virtual Task<int> SaveContactsAsync(List<WxContact> contacts, string applicationToken)
+        public async Task<byte[]> ExportExcelAsync(WxKeywordReply search)
         {
-            contacts.ForEach(c => c.ApplicationToken = applicationToken);
-            //先删除
-            await _defaultRepository.DeleteAsync(d => d.ApplicationToken == applicationToken);
-            //插入
-            return await this._defaultRepository.InsertRangeAsync(contacts);
+            var tableViewModel = await this.FindListAsync(0, 0, search);
+            return this.ExportExcelByPagingView(tableViewModel, null, "Id");
         }
+
 
 
     }

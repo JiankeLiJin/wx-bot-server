@@ -1,47 +1,87 @@
 <template>
-<div>
-  <a-form layout="horizontal" :model="state.vm.form" v-bind="{
-            labelCol: { span: 4 },
-            wrapperCol: { span: 14 },
-          }">
-    <a-form-item label="群聊自动回复是否开启">
-      <a-switch v-model:checked="state.vm.form.groupAutoReplyFlag" checked-children="开" un-checked-children="关" />
-    </a-form-item>
-    <a-form-item label="私聊自动回复是否开启">
-      <a-switch v-model:checked="state.vm.form.talkPrivateAutoReplyFlag" checked-children="开" un-checked-children="关" />
-    </a-form-item>
-    <a-form-item label="回复机器人类型">
-      <a-radio-group v-model:value="state.vm.form.replyBotType" default-value="TXJQR">
-      <a-radio value="TXJQR" >天行机器人</a-radio>
-      <a-radio value="TXXLJQR">腾讯闲聊机器人</a-radio>
-    </a-radio-group>
-    </a-form-item>
-    <a-form-item label="天行机器人key">
-      <a-input
-        v-model:value="state.vm.form.tianXingApiKey"
-        placeholder="请输入 天行机器人key"
-      />
-    </a-form-item>
-    <a-form-item label="腾讯TencentSecretId">
-      <a-input
-        v-model:value="state.vm.form.tencentSecretId"
-        placeholder="请输入 腾讯TencentSecretId"
-      />
-    </a-form-item>
-    <a-form-item label="腾讯TencentSecretKey">
-      <a-input
-        v-model:value="state.vm.form.tencentSecretKey"
-        placeholder="请输入 腾讯TencentSecretKey"
-      />
-    </a-form-item>
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }" >
-      <a-button type="primary" @click="methods.saveForm()">保存</a-button>
-    </a-form-item>
-  </a-form>
+  <div>
+    <a-form
+      layout="horizontal"
+      :model="state.vm.form"
+      v-bind="{
+        labelCol: { span: 4 },
+        wrapperCol: { span: 10 },
+      }"
+    >
+      <a-form-item label="平台应用Token">
+        {{ state.vm.form.applicationToken }}
+      </a-form-item>
+      <a-form-item label="群聊自动回复是否开启">
+        <a-switch
+          v-model:checked="state.vm.form.groupAutoReplyFlag"
+          checked-children="开"
+          un-checked-children="关"
+          :checkedValue="1"
+          :unCheckedValue="0"
+        />
+      </a-form-item>
+      <a-form-item label="私聊自动回复是否开启">
+        <a-switch
+          v-model:checked="state.vm.form.talkPrivateAutoReplyFlag"
+          checked-children="开"
+          un-checked-children="关"
+          :checkedValue="1"
+          :unCheckedValue="0"
+        />
+      </a-form-item>
+      <a-form-item label="回复机器人类型">
+        <a-radio-group
+          v-model:value="state.vm.form.replyBotType"
+          default-value="1"
+        >
+          <a-radio :value="1">天行机器人</a-radio>
+          <a-radio :value="2">腾讯闲聊机器人</a-radio>
+        </a-radio-group>
+      </a-form-item>
+      <v-show v-show="state.vm.form.replyBotType == 1">
+        <a-form-item label="天行机器人key">
+          <a-row :gutter="[15, 15]">
+            <a-col :span="21">
+              <a-input
+                v-model:value="state.vm.form.tianXingApiKey"
+                placeholder="请输入 天行机器人key"
+              />
+            </a-col>
+            <a-col :span="3">
+              <a target="_blank">申请地址</a>
+            </a-col>
+          </a-row>
+        </a-form-item>
+      </v-show>
+      <v-show v-show="state.vm.form.replyBotType == 2">
+        <a-form-item label="腾讯TencentSecretId">
+          <a-row :gutter="[15, 15]">
+            <a-col :span="21">
+              <a-input
+                v-model:value="state.vm.form.tencentSecretId"
+                placeholder="请输入 腾讯TencentSecretId"
+              />
+            </a-col>
+            <a-col :span="3">
+              <a target="_blank">申请地址</a>
+            </a-col>
+          </a-row>
+        </a-form-item>
+        <a-form-item label="腾讯TencentSecretKey">
+          <a-input
+            v-model:value="state.vm.form.tencentSecretKey"
+            placeholder="请输入 腾讯TencentSecretKey"
+          />
+        </a-form-item>
+      </v-show>
+      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+        <a-button type="primary" @click="methods.saveForm()">保存</a-button>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 <script setup>
-import { reactive,onMounted } from "vue";
+import { reactive, onMounted } from "vue";
 import tools from "@/scripts/tools";
 import service from "@/service/wxbot/wxBotConfigService";
 
@@ -51,8 +91,7 @@ const emits = defineEmits(["onSuccess"]);
 const state = reactive({
   vm: {
     id: "",
-    form: {
-    },
+    form: {},
   },
   visible: false,
   saveLoading: false,
@@ -75,11 +114,12 @@ const methods = {
       tools.message("操作成功!", "成功");
       emits("onSuccess", res.data);
       state.visible = false;
+      state.vm.form = res.data;
     });
   },
 };
 onMounted(() => {
- // methods.findForm();
+  methods.findForm();
 });
 </script>
 <style lang="less" scoped>

@@ -46,6 +46,7 @@ namespace HZY.Services.Admin
             form = form.NullSafe();
             form.ApplicationToken = _accountInfo.Id.ToStr();
             res[nameof(form)] = form;
+            res["id"] = _accountInfo.Id.ToStr(); ;
             return res;
         }
 
