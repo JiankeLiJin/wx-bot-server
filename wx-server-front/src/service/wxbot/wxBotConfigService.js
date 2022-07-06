@@ -1,4 +1,4 @@
-import {get, post, download } from '@/scripts/request';
+import { get, post, download } from '@/scripts/request';
 import tools from "@/scripts/tools";
 
 const controllerName = "admin/wxbotconfig";
@@ -19,7 +19,6 @@ export default {
      * @param {要删除的id 数组} ids 
      */
     deleteList(ids) {
-        console.log(ids);
         if (ids && ids.length === 0) {
             return tools.message("请选择要删除的数据!", "警告");
         }

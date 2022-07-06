@@ -4,6 +4,7 @@
     title="微信交流群"
     :bordered="false"
     hoverable
+    :headStyle="headStyle"
   >
     <p>微信交流群</p>
   </a-card>
@@ -12,6 +13,7 @@
 export default { name: "HomeComminicate" };
 </script>
 <script setup>
+import { headStyle } from "@/views/home/config";
 import { ref } from "vue";
 </script>
 

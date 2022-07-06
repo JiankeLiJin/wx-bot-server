@@ -24,7 +24,6 @@ import HomeIntroduce from "@/views/home/components/HomeIntroduce.vue";
 import HomeNews from "@/views/home/components/HomeNews.vue";
 import HomeDescription from "@/views/home/components/HomeDescription.vue";
 import HomeComminicate from "@/views/home/components/HomeComminicate.vue";
-import { ref } from "vue";
 </script>
 
 <style lang="less">

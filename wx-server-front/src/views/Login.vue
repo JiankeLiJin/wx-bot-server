@@ -39,8 +39,8 @@ import tools from "@/scripts/tools";
 import loginService from "@/service/system/loginService";
 
 const state = reactive({
-  userName: "zhouli",
-  userPassword: "9901226619ll",
+  userName: "",
+  userPassword: "",
 });
 const inputPassword = ref(null);
 const loading = ref(false);
@@ -57,7 +57,7 @@ const methods = {
     loginService
       .login(state.userName, state.userPassword)
       .then((res) => {
-        if (res.code !== 1) return;
+        if (res.code !== 1) return loading.value = false;;
         tools.setAuthorization(res.data.token);
         router.push("/").then(() => {
           loading.value = false;
