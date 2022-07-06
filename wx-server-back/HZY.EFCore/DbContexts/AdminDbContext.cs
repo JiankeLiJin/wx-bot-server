@@ -66,6 +66,8 @@ public class AdminDbContext : DbContextBase
     public DbSet<WxTimedTask> WxTimedTask { get; set; }
     public DbSet<WxBotConfig> WxBotConfig { get; set; }
     public DbSet<WxContact> WxContact { get; set; }
+    public DbSet<WxKeywordReply> WxKeywordReply { get; set; }
+    public DbSet<WxSayEveryDay> WxSayEveryDay { get; set; }
     #endregion
 
     #endregion
@@ -97,6 +99,8 @@ public class AdminDbContext : DbContextBase
         modelBuilder.Entity<WxTimedTask>().ToTable("wx_timed_task");
         modelBuilder.Entity<WxBotConfig>().ToTable("wx_bot_config");
         modelBuilder.Entity<WxContact>().ToTable("wx_contact");
+        modelBuilder.Entity<WxKeywordReply>().ToTable("wx_keyword_reply");
+        modelBuilder.Entity<WxSayEveryDay>().ToTable("wx_say_every_day");
     }
 
 

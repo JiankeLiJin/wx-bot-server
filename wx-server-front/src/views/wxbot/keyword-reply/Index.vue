@@ -53,48 +53,39 @@
         <!-- 列的隐藏显示 -->
         <a-popover>
           <template #content>
-            <div v-for="item in state.columns.filter((w) => w.fieldName.substr(0, 1) != '_')">
-              <a-checkbox v-model:checked="item.show" @change="() => nextTick(() => refList.table.refreshColumn())">{{
-                  item.title
-              }}</a-checkbox>
+            <div v-for="(item,index) in state.columns.filter((w) => w.fieldName.substr(0, 1) != '_')" :key="index" >
+              <a-checkbox v-model:checked="item.show" @change="() => nextTick(() => refList.table.refreshColumn())">{{ item.title }}</a-checkbox>
             </div>
           </template>
-          <a-button>
-            <AppIcon name="BarsOutlined" />
-          </a-button>
+          <a-button><AppIcon name="BarsOutlined" /></a-button>
         </a-popover>
         <!--  -->
       </template>
 
       <!-- 表格 -->
       <template #table-col-default>
-          <vxe-column field="receivingObjectWxId" title="接收对象wxId" show-overflow tree-node width="200"></vxe-column>
-          <vxe-column field="receivingObjectName" title="接收对象" show-overflow tree-node width="200"></vxe-column>
-          <vxe-column field="sendTypeText" title="发送类型" width="80">
-          </vxe-column>
-          <vxe-column field="sendContent" title="发送内容" show-overflow min-width="220"></vxe-column>
-          <vxe-column field="sendTime" title="发送时间(cron表达式)" show-overflow width="250"></vxe-column>
-          <vxe-column field="lastModificationTime" title="更新时间"></vxe-column>
-          <vxe-column field="creationTime" title="创建时间"></vxe-column>
-          <vxe-column field="id" title="操作" v-if="(power.update || power.delete)">
-            <template #default="{ row }">
-              <template v-if="power.update">
-                <a href="javascript:void(0)" @click="methods.openForm(row.id)">编辑</a>
-              </template>
-                <a-divider type="vertical" />
-               <template v-if="power.update">
-                <a href="javascript:void(0)" @click="methods.send(row.id)">立即发送</a>
-              </template>
-              <a-divider type="vertical" />
-              <template v-if="power.delete">
-                <a-popconfirm title="您确定要删除吗?" @confirm="methods.deleteList(row.id)" okText="确定" cancelText="取消">
-                  <a class="text-danger">删除</a>
-                </a-popconfirm>
-              </template>
+        <!-- 动态列 -->
+        <vxe-column field="keyWord" title="关键词" show-overflow></vxe-column>
+        <vxe-column field="matchTypeText" title="匹配类型(模糊匹配,精确匹配)" show-overflow></vxe-column>
+        <vxe-column field="takeEffectType" title="生效类型" show-overflow></vxe-column>
+        <vxe-column field="sendTypeText" title="发送类型" show-overflow></vxe-column>
+        <vxe-column field="sendContent" title="发送内容" show-overflow></vxe-column>
+
+          <!--  v-if="power.update || power.delete" 预防操作列还存在 -->
+        <vxe-column field="id" title="操作" v-if="(power.update || power.delete)">
+          <template #default="{ row }">
+            <template v-if="power.update">
+              <a href="javascript:void(0)" @click="methods.openForm(row.id)">编辑</a>
             </template>
-          </vxe-column>
-        </template>
-        <!--  v-if="power.update || power.delete" 预防操作列还存在 -->
+            <a-divider type="vertical" />
+            <template v-if="power.delete">
+              <a-popconfirm title="您确定要删除吗?" @confirm="methods.deleteList(row.id)" okText="确定" cancelText="取消">
+                <a class="text-danger">删除</a>
+              </a-popconfirm>
+            </template>
+          </template>
+        </vxe-column>
+      </template>
     </List>
 
     <!--表单弹层-->
@@ -103,7 +94,7 @@
 </template>
 
 <script>
-export default { name: "wxtimedtaskIndex" };
+export default { name: "wxKeyordReplyIndex" };
 </script>
 
 <script setup>
@@ -113,7 +104,7 @@ import List from "@/components/curd/List.vue";
 import AppIcon from "@/components/AppIcon.vue";
 import Info from "./Info.vue";
 import tools from "@/scripts/tools";
-import service from "@/service/wxbot/wxTimedTaskService";
+import service from "@/service/wxbot/wxKeywordReplyService";
 import router from "@/router";
 
 const appStore = useAppStore();
@@ -141,7 +132,6 @@ const refList = ref(null);
 
 //权限
 const power = appStore.getPowerByMenuId(router.currentRoute.value.meta.menuId);
-console.log(power);
 
 const methods = {
   onChange(info) {
@@ -151,7 +141,7 @@ const methods = {
     methods.findList();
   },
   //重置检索条件
- onResetSearch() {
+  onResetSearch() {
     state.page = 1;
     let searchVm = state.search.vm;
     for (let key in searchVm) {

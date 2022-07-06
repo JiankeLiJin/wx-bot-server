@@ -48,7 +48,7 @@
               />
             </a-col>
             <a-col :span="3">
-              <a-button type="link">申请地址</a-button>
+              <a-button type="link" href="https://www.tianapi.com/signup.html?source=ch4553544">申请地址</a-button>
             </a-col>
           </a-row>
         </a-form-item>
@@ -63,7 +63,7 @@
               />
             </a-col>
             <a-col :span="2">
-              <a-button type="link">申请地址</a-button>
+              <a-button type="link" href="https://cloud.tencent.com/document/api/271/39416">申请地址</a-button>
             </a-col>
           </a-row>
         </a-form-item>

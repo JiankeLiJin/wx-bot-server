@@ -53,7 +53,8 @@ namespace HZY.Services.Admin
         public async Task<PagingView> FindListAsync(int page, int size, WxContact search)
         {
             var query = this._defaultRepository.Select
-.WhereIf(!string.IsNullOrWhiteSpace(search?.Name), w => w.Name.Contains(search.Name))
+                    .WhereIf(!string.IsNullOrWhiteSpace(search?.Name), w => w.Name.Contains(search.Name) || w.Alias.Contains(search.Name))
+                    .Where(w => w.ApplicationToken.Equals(_accountInfo.Id.ToStr()))
                     .OrderByDescending(w => w.CreationTime)
                     .Select(w => new
                     {

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using HZY.Models.Entities.BaseEntitys;
+using HZY.Models.Enums;
 
 namespace HZY.Models.Entities
 {
@@ -19,7 +20,7 @@ namespace HZY.Models.Entities
         /// <summary>
         ///  发送类型 => 备注: 发送类型
         /// </summary>
-        public String SendType { get; set; }
+        public ETimedTaskSendType SendType { get; set; }
 
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace HZY.Models.Entities
         /// <summary>
         ///  匹配类型(模糊匹配,精确匹配) => 备注: 匹配类型(模糊匹配,精确匹配)
         /// </summary>
-        public String MatchType { get; set; }
+        public EMatchType MatchType { get; set; }
 
 
     }

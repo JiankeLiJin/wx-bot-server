@@ -21,11 +21,11 @@ using HZY.EFCore.Repositories.Admin.Core;
 namespace HZY.Services.Admin
 {
     /// <summary>
-    /// 关键词回复表 服务 WxKeywordReplyService
+    /// 情侣每日说 服务 WxSayEveryDayService
     /// </summary>
-    public class WxKeywordReplyService : AdminBaseService<IAdminRepository<WxKeywordReply>>
+    public class WxSayEveryDayService : AdminBaseService<IAdminRepository<WxSayEveryDay>>
     {
-        public WxKeywordReplyService(IAdminRepository<WxKeywordReply> defaultRepository)
+        public WxSayEveryDayService(IAdminRepository<WxSayEveryDay> defaultRepository) 
             : base(defaultRepository)
         {
 
@@ -38,21 +38,14 @@ namespace HZY.Services.Admin
         /// <param name="size">size</param>
         /// <param name="search">search</param>
         /// <returns></returns>
-        public async Task<PagingView> FindListAsync(int page, int size, WxKeywordReply search)
+        public async Task<PagingView> FindListAsync(int page, int size, WxSayEveryDay search)
         {
             var query = this._defaultRepository.Select
                     .OrderByDescending(w => w.CreationTime)
                     .Select(w => new
                     {
                         w.Id,
-                        w.ApplicationToken,
-                        w.SendType,
-                        SendTypeText = w.SendType.ToDescriptionOrString(),
-                        w.SendContent,
-                        w.TakeEffectType,
-                        w.KeyWord,
-                        w.MatchType,
-                        MatchTypeText = w.MatchType.ToDescriptionOrString(),
+                        w.ApplicationToken,w.ReceivingObjectId,w.SendTime,w.City,w.ClosingRemarks,w.AnniversaryDay,
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
                         CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
                     })
@@ -79,7 +72,7 @@ namespace HZY.Services.Admin
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        public async Task<Dictionary<string, object>> FindFormAsync(Guid id)
+        public async Task<Dictionary<string,object>> FindFormAsync(Guid id)
         {
             var res = new Dictionary<string, object>();
             var form = await this._defaultRepository.FindByIdAsync(id);
@@ -95,7 +88,7 @@ namespace HZY.Services.Admin
         /// </summary>
         /// <param name="form">form</param>
         /// <returns></returns>
-        public Task<WxKeywordReply> SaveFormAsync(WxKeywordReply form)
+        public Task<WxSayEveryDay> SaveFormAsync(WxSayEveryDay form)
         {
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
@@ -105,7 +98,7 @@ namespace HZY.Services.Admin
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        public async Task<byte[]> ExportExcelAsync(WxKeywordReply search)
+        public async Task<byte[]> ExportExcelAsync(WxSayEveryDay search)
         {
             var tableViewModel = await this.FindListAsync(0, 0, search);
             return this.ExportExcelByPagingView(tableViewModel, null, "Id");

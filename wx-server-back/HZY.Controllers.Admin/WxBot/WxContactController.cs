@@ -27,6 +27,7 @@ namespace HZY.Controllers.Admin
     /// 微信联系人 控制器
     /// </summary>
     [ControllerDescriptor(MenuId = "41", DisplayName = "微信联系人")]
+    [ApiExplorerSettings(GroupName = nameof(ApiVersions.WxBot))]
     public class WxContactController : AdminBaseController<WxContactService>
     {
         public WxContactController(WxContactService defaultService)

@@ -92,6 +92,14 @@
             <param name="applicationToken">应用token</param>
             <returns></returns>
         </member>
+        <member name="M:HZY.WebHost.Controllers.Public.WxClientController.UpDateWxUserInfo(System.String,HZY.Models.DTO.WxBot.WxUserInfoDTO)">
+            <summary>
+            更新微信用户信息
+            </summary>
+            <param name="applicationToken">应用token</param>
+            <param name="wxUserInfo">微信用户信息</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.WebHost.Filters.ApiAuthorizationFilter">
             <summary>
             授权认证 拦截

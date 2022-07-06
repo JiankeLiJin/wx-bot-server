@@ -20,6 +20,7 @@ using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Framework;
 using HZY.Services.Admin;
 using HZY.Models.Entities;
+using HZY.Models.DTO.WxBot;
 
 namespace HZY.Controllers.Admin
 {
@@ -27,6 +28,7 @@ namespace HZY.Controllers.Admin
     /// 微信联系人 控制器
     /// </summary>
     [ControllerDescriptor(MenuId = "39", DisplayName = "微信联系人")]
+    [ApiExplorerSettings(GroupName = nameof(ApiVersions.WxBot))]
     public class WxBotConfigController : AdminBaseController<WxBotConfigService>
     {
         public WxBotConfigController(WxBotConfigService defaultService) 
@@ -59,5 +61,13 @@ namespace HZY.Controllers.Admin
         {
             return this._defaultService.SaveFormAsync(form);
         }
+        /// <summary>
+        /// 获取微信用户信息
+        /// </summary>
+        /// <returns></returns>
+        [ActionDescriptor(DisplayName = "获取微信用户信息")]
+        [ApiCheckModel]
+        [HttpGet("WxUserInfo")]
+        public WxUserInfoDTO GetWxUserInfo() => this._defaultService.GetWxUserInfo();
     }
 }

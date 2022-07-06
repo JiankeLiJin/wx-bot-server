@@ -1355,6 +1355,41 @@
              匹配类型(模糊匹配,精确匹配) => 备注: 匹配类型(模糊匹配,精确匹配)
             </summary>
         </member>
+        <member name="T:HZY.Models.Entities.WxSayEveryDay">
+            <summary>
+            情侣每日说
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.ApplicationToken">
+            <summary>
+             应用Token => 备注: 应用Token
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.ReceivingObjectId">
+            <summary>
+             接受对象(联系人Id) => 备注: 接受对象(联系人Id)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.SendTime">
+            <summary>
+             发送时间(cron表达式) => 备注: 发送时间(cron表达式)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.City">
+            <summary>
+             所在城市 => 备注: 所在城市
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.ClosingRemarks">
+            <summary>
+             结尾备注 => 备注: 结尾备注
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.AnniversaryDay">
+            <summary>
+             纪念日 => 备注: 纪念日
+            </summary>
+        </member>
         <member name="T:HZY.Models.Entities.WxTimedTask">
             <summary>
             微信机器人定时任务
@@ -1388,6 +1423,11 @@
         <member name="P:HZY.Models.Entities.WxTimedTask.SendTime">
             <summary>
              发送时间(cron表达式) => 备注: 发送时间(cron表达式)
+            </summary>
+        </member>
+        <member name="T:HZY.Models.Enums.EMatchType">
+            <summary>
+            机器人回复关键字匹配类型 枚举
             </summary>
         </member>
         <member name="T:HZY.Models.Enums.ETimedTaskSendType">

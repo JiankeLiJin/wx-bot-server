@@ -718,6 +718,13 @@
             <param name="form">form</param>
             <returns></returns>
         </member>
+        <member name="M:HZY.Controllers.Admin.WxBotConfigController.GetWxUserInfo(System.String)">
+            <summary>
+            获取微信用户信息
+            </summary>
+            <param name="applicationToken">应用token</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.Controllers.Admin.WxContactController">
             <summary>
             微信联系人 控制器
@@ -774,6 +781,48 @@
             <returns></returns>
         </member>
         <member name="M:HZY.Controllers.Admin.WxKeywordReplyController.ExportExcelAsync(HZY.Models.Entities.WxKeywordReply)">
+            <summary>
+            导出Excel
+            </summary>
+            <param name="search"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HZY.Controllers.Admin.WxSayEveryDayController">
+            <summary>
+            情侣每日说 控制器
+            </summary>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxSayEveryDayController.FindListAsync(System.Int32,System.Int32,HZY.Models.Entities.WxSayEveryDay)">
+            <summary>
+            获取列表
+            </summary>
+            <param name="size">size</param>
+            <param name="page">page</param>
+            <param name="search">search</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxSayEveryDayController.DeleteListAsync(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            根据id数组删除
+            </summary>
+            <param name="ids">ids</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxSayEveryDayController.FindFormAsync(System.Guid)">
+            <summary>
+            查询表单数据
+            </summary>
+            <param name="id">id</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxSayEveryDayController.SaveFormAsync(HZY.Models.Entities.WxSayEveryDay)">
+            <summary>
+            保存
+            </summary>
+            <param name="form">form</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Controllers.Admin.WxSayEveryDayController.ExportExcelAsync(HZY.Models.Entities.WxSayEveryDay)">
             <summary>
             导出Excel
             </summary>

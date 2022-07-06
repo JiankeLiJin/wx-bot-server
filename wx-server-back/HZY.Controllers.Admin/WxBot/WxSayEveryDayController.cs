@@ -16,20 +16,21 @@ using HZY.Models.BO;
 using HZY.Models.Consts;
 using HZY.Models.DTO;
 using HZY.Models.DTO.Framework;
-using HZY.Models.Entities;
+using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Framework;
 using HZY.Services.Admin;
+using HZY.Models.Entities;
 
 namespace HZY.Controllers.Admin
 {
     /// <summary>
-    /// 关键词回复表 控制器
+    /// 情侣每日说 控制器
     /// </summary>
-    [ControllerDescriptor(MenuId = "40", DisplayName = "关键词回复表")]
+    [ControllerDescriptor(MenuId = "42", DisplayName = "情侣每日说")]
     [ApiExplorerSettings(GroupName = nameof(ApiVersions.WxBot))]
-    public class WxKeywordReplyController : AdminBaseController<WxKeywordReplyService>
+    public class WxSayEveryDayController : AdminBaseController<WxSayEveryDayService>
     {
-        public WxKeywordReplyController(WxKeywordReplyService defaultService) 
+        public WxSayEveryDayController(WxSayEveryDayService defaultService) 
             : base(defaultService)
         {
 
@@ -44,7 +45,7 @@ namespace HZY.Controllers.Admin
         /// <returns></returns>
         [ActionDescriptor(AdminFunctionConsts.Function_Display, DisplayName = "查看数据")]
         [HttpPost("FindList/{size}/{page}")]
-        public Task<PagingView> FindListAsync([FromRoute] int size, [FromRoute] int page, [FromBody] WxKeywordReply search)
+        public Task<PagingView> FindListAsync([FromRoute] int size, [FromRoute] int page, [FromBody] WxSayEveryDay search)
         {
             return this._defaultService.FindListAsync(page, size, search);
         }
@@ -82,7 +83,7 @@ namespace HZY.Controllers.Admin
         [ActionDescriptor(DisplayName = "保存/编辑数据")]
         [ApiCheckModel]
         [HttpPost("SaveForm")]
-        public Task<WxKeywordReply> SaveFormAsync([FromBody] WxKeywordReply form)
+        public Task<WxSayEveryDay> SaveFormAsync([FromBody] WxSayEveryDay form)
         {
             return this._defaultService.SaveFormAsync(form);
         }
@@ -95,7 +96,7 @@ namespace HZY.Controllers.Admin
         [ActionDescriptor(AdminFunctionConsts.Function_Export, DisplayName = "导出数据")]
         [ApiResourceCacheFilter(5)]
         [HttpPost("ExportExcel")]
-        public async Task ExportExcelAsync([FromBody] WxKeywordReply search)
+        public async Task ExportExcelAsync([FromBody] WxSayEveryDay search)
         {
             var data = await this._defaultService.ExportExcelAsync(search);
             var name = $"{PermissionUtil.GetControllerDisplayName(this.GetType())}列表数据 {DateTime.Now.ToString("yyyy-MM-dd")}.xls";

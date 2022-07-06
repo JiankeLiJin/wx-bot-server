@@ -18,6 +18,9 @@ using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
 using HZY.Models.BO;
+using Microsoft.Extensions.Caching.Memory;
+using HZY.Models.DTO.WxBot;
+using HZY.Models.Consts;
 
 namespace HZY.Services.Admin
 {
@@ -27,22 +30,25 @@ namespace HZY.Services.Admin
     public class WxBotConfigService : AdminBaseService<IAdminRepository<WxBotConfig>>
     {
         private readonly AccountInfo _accountInfo;
+        private readonly IMemoryCache _cache;
         public WxBotConfigService(IAdminRepository<WxBotConfig> defaultRepository,
-            IAccountDomainService accountService) 
+            IAccountDomainService accountService,
+            IMemoryCache cache)
             : base(defaultRepository)
         {
             this._accountInfo = accountService.GetAccountInfo();
+            _cache = cache;
         }
 
         /// <summary>
         /// 查询表单数据
         /// </summary>
         /// <returns></returns>
-        public async Task<Dictionary<string,object>> FindFormAsync()
+        public async Task<Dictionary<string, object>> FindFormAsync()
         {
 
             var res = new Dictionary<string, object>();
-            var form = await this._defaultRepository.FindAsync(t=>t.ApplicationToken== _accountInfo.Id.ToStr());
+            var form = await this._defaultRepository.FindAsync(t => t.ApplicationToken == _accountInfo.Id.ToStr());
             form = form.NullSafe();
             form.ApplicationToken = _accountInfo.Id.ToStr();
             res[nameof(form)] = form;
@@ -67,6 +73,16 @@ namespace HZY.Services.Admin
         public async Task<string> GetWxBotConfigAsync(string applicationToken)
         {
             return await Task.FromResult("");
+        }
+        /// <summary>
+        /// 获取微信用户信息
+        /// </summary>
+        /// <returns></returns>
+        public WxUserInfoDTO GetWxUserInfo()
+        {
+            WxUserInfoDTO userInfo = _cache.Get<WxUserInfoDTO>(string.Format(CacheKeyConsts.WxUserInfoKey, _accountInfo.Id.ToStr()));
+
+            return userInfo ?? default;
         }
     }
 }
