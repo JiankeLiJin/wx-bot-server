@@ -718,11 +718,10 @@
             <param name="form">form</param>
             <returns></returns>
         </member>
-        <member name="M:HZY.Controllers.Admin.WxBotConfigController.GetWxUserInfo(System.String)">
+        <member name="M:HZY.Controllers.Admin.WxBotConfigController.GetWxUserInfo">
             <summary>
             获取微信用户信息
             </summary>
-            <param name="applicationToken">应用token</param>
             <returns></returns>
         </member>
         <member name="T:HZY.Controllers.Admin.WxContactController">

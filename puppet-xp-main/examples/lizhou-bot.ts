@@ -164,28 +164,13 @@ async function onMessage({
  * 获取用户信息处理函数
  */
 async function handleGetPerson() {
-  // @ts-ignore
-  userInfo = JSON.parse(await puppet.sidecar.getMyselfInfo());
-  // @ts-ignore
-  if (userInfo.id == null || userInfo.id == undefined) {
-    console.log("获取账号信息失败");
-    // @ts-ignore
-    await puppet.logout();
-    return;
-  } else {
-    console.log("获取用户信息成功");
-  }
-  console.log("用户信息:", userInfo);
-
   //上传用户信息
-
+  await updateWxUserInfo();
   //上传联系人
+  await updateContacts();
+  //获取平台配置 定时任务 每日说 等
   // @ts-ignore
-  const wxContacts = JSON.parse(await puppet.sidecar.getContact())
-  await updateContacts(wxContacts);
-  // @ts-ignore
-  console.info(`小助手<${userInfo.name}>登录了`);
-
+  console.log("更新完成,")
 }
 /**
  * 消息处理函数
@@ -210,11 +195,56 @@ async function handleRecvMsg(j) {
 
   }
 }
+
+
+/**
+ * 上传用户信息
+ * @returns 
+ */
+async function updateWxUserInfo() {
+  //设定定时每30秒更新上传一次用户信息
+  setLocalSchedule(
+    "*/30 * * * * *",
+    async () => {
+      // @ts-ignore
+      userInfo = JSON.parse(await puppet.sidecar.getMyselfInfo());
+      // @ts-ignore
+      if (userInfo.id == null || userInfo.id == undefined) {
+        console.log("获取账号信息失败");
+        // @ts-ignore
+        await puppet.logout();
+        return;
+      } else {
+        console.log("获取用户信息成功");
+        console.log("用户信息:", userInfo);
+        let data = {
+          // @ts-ignore
+          wxId: userInfo.id,
+          // @ts-ignore
+          WxCode: userInfo.code,
+          // @ts-ignore
+          WxName: userInfo.name,
+          // @ts-ignore
+          AvatarUrl: userInfo.head_img_url,
+        };
+        let res = await PostRequest(WECHAT_URL + `/wx-user-info/${APPLICTION_TOKEN}`, data);
+        if (res && res.code == 1) {
+          console.log("上传用户信息成功!,响应结果:", res);
+        }
+        else {
+          console.log("上传用户信息失败!,响应结果:", res);
+        }
+      }
+    },
+    "用户信息更新任务"
+  )
+}
 /**
  * 上传联系人
- * @param contacts 微信联系人
  */
-async function updateContacts(contacts) {
+async function updateContacts() {
+  // @ts-ignore
+  const contacts = JSON.parse(await puppet.sidecar.getContact())
   console.log(`联系人有${contacts.length}个`);
   let res = await PostRequest(WECHAT_URL + `/save-contacts/${APPLICTION_TOKEN}`, contacts.map(c => ({
     wxId: c.id,
@@ -229,10 +259,10 @@ async function updateContacts(contacts) {
     console.log("上传联系人成功!,响应结果:", res);
   }
   else {
- 
     console.log("上传联系人失败!,响应结果:", res);
   }
 }
+
 
 
 /**

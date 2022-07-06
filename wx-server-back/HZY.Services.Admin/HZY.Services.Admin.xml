@@ -973,11 +973,10 @@
             <param name="applicationToken">应用token</param>
             <returns></returns>
         </member>
-        <member name="M:HZY.Services.Admin.WxBotConfigService.GetWxUserInfo(System.String)">
+        <member name="M:HZY.Services.Admin.WxBotConfigService.GetWxUserInfo">
             <summary>
             获取微信用户信息
             </summary>
-            <param name="applicationToken">应用token</param>
             <returns></returns>
         </member>
         <member name="T:HZY.Services.Admin.WxContactService">
