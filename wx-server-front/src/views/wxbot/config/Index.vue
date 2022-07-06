@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="basic-config">
     <a-form
       layout="horizontal"
       :model="state.vm.form"
@@ -48,7 +48,7 @@
               />
             </a-col>
             <a-col :span="3">
-              <a target="_blank">申请地址</a>
+              <a-button type="link">申请地址</a-button>
             </a-col>
           </a-row>
         </a-form-item>
@@ -56,14 +56,14 @@
       <v-show v-show="state.vm.form.replyBotType == 2">
         <a-form-item label="腾讯TencentSecretId">
           <a-row :gutter="[15, 15]">
-            <a-col :span="21">
+            <a-col :span="22">
               <a-input
                 v-model:value="state.vm.form.tencentSecretId"
                 placeholder="请输入 腾讯TencentSecretId"
               />
             </a-col>
-            <a-col :span="3">
-              <a target="_blank">申请地址</a>
+            <a-col :span="2">
+              <a-button type="link">申请地址</a-button>
             </a-col>
           </a-row>
         </a-form-item>
@@ -123,4 +123,7 @@ onMounted(() => {
 });
 </script>
 <style lang="less" scoped>
+.basic-config {
+// 
+}
 </style>
