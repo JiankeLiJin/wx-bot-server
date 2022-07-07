@@ -14,14 +14,15 @@
               </a-input>
             </a-form-item>
             <a-form-item>
-              <a-input-password type="password" v-model:value="state.userPassword" size="large" ref="inputPassword" @keyup.enter="state.check">
+              <a-input-password type="password" v-model:value="state.userPassword" size="large" ref="inputPassword"
+                @keyup.enter="state.check">
                 <template #prefix>
                   <AppIcon name="LockOutlined" style="color: #1890ff; font-size: 14px" />
                 </template>
               </a-input-password>
             </a-form-item>
             <a-form-item>
-              <a-button type="primary" @click="methods.check" :loading="loading" size="large" block>登录</a-button>
+              <a-button type="primary" @click.enter="methods.check" :loading="loading" size="large" block>登录</a-button>
             </a-form-item>
           </a-form>
         </div>

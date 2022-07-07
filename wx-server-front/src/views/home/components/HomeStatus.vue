@@ -1,29 +1,14 @@
 <template>
-  <a-card
-    class="home-status"
-    :bordered="false"
-    hoverable
-    :headStyle="headStyle"
-  >
+  <a-card class="home-status" :bordered="false" hoverable :headStyle="headStyle">
     <template #title>
       微秘书状态
-      <!-- <a-tag color="#6a615d">未在线</a-tag> -->
-      <v-if v-if="state.wxUserInfo.wxId">
-        <a-tag color="#87d068">在线</a-tag>
-      </v-if>
-      <v-if v-if="!state.wxUserInfo.wxId">
-        <a-tag color="#6a615d">离线</a-tag>
-      </v-if>
+      <a-tag :color="wxId ? '#87d068' : '#6a615d'">{{ wxId ? '在线' : '离线' }}</a-tag>
     </template>
     <div class="content">
-      <a-image
-        :width="150"
-        :preview="false"
-        :src="state.wxUserInfo.avatarUrl"
-      />
+      <a-image :width="150" :preview="false" :src="avatarUrl" />
       <div class="content-info">
-        <div class="name">{{ state.wxUserInfo.wxName }}</div>
-        <div class="vx-code">微信Code：{{ state.wxUserInfo.wxCode }}</div>
+        <div class="name">{{ wxName }}</div>
+        <div class="vx-code">微信Code：{{ wxCode }}</div>
       </div>
     </div>
   </a-card>
@@ -33,7 +18,7 @@ export default { name: "HomeStatus" };
 </script>
 <script setup>
 import { headStyle } from "@/views/home/config";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, toRefs } from "vue";
 import homeService from "@/service/home/homeService";
 
 //微信用户信息
@@ -55,9 +40,10 @@ const methods = {
     if (res && res.code == 1) {
       if (res.data) state.wxUserInfo = res.data;
     }
-    console.log(res, "RES");
   },
 };
+
+let { avatarUrl, wxId, wxCode, wxName } = toRefs(state.wxUserInfo)
 </script>
 
 <style lang="less">
