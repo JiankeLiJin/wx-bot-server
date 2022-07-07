@@ -31,13 +31,19 @@ namespace HZY.Services.Admin
     {
         private readonly AccountInfo _accountInfo;
         private readonly IMemoryCache _cache;
+        private readonly IAdminRepository<WxTimedTask> _timedTaskRepository;
+        private readonly IAdminRepository<WxSayEveryDay> _sayEveryDayRepository;
         public WxBotConfigService(IAdminRepository<WxBotConfig> defaultRepository,
             IAccountDomainService accountService,
-            IMemoryCache cache)
+            IMemoryCache cache,
+            IAdminRepository<WxTimedTask> timedTaskRepository,
+            IAdminRepository<WxSayEveryDay> sayEveryDayRepository)
             : base(defaultRepository)
         {
             this._accountInfo = accountService.GetAccountInfo();
             _cache = cache;
+            _timedTaskRepository = timedTaskRepository;
+            _sayEveryDayRepository = sayEveryDayRepository;
         }
 
         /// <summary>
@@ -66,14 +72,29 @@ namespace HZY.Services.Admin
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
         /// <summary>
-        /// 获取微信机器人配置
+        /// 客户端获取微信机器人配置
         /// </summary>
         /// <param name="applicationToken">应用token</param>
         /// <returns></returns>
-        public async Task<string> GetWxBotConfigAsync(string applicationToken)
+        public async Task<dynamic> GetClientWxBotConfigAsync(string applicationToken)
         {
-            return await Task.FromResult("");
+            WxBotConfig wxBotConfig = await this.GetWxBotConfigAsync(applicationToken);
+            List<WxTimedTask> timedTasks = await _timedTaskRepository.ToListAsync(w => w.ApplicationToken == applicationToken);
+            List<WxSayEveryDay> sayEveryDays = await _sayEveryDayRepository.ToListAsync(w => w.ApplicationToken == applicationToken);
+            return new
+            {
+                wxBotConfig,
+                timedTasks,
+                sayEveryDays
+            };
         }
+        /// <summary>
+        /// 获取微信机器人配置
+        /// </summary>
+        /// <param name="applicationToken"></param>
+        /// <returns></returns>
+        public async Task<WxBotConfig> GetWxBotConfigAsync(string applicationToken) => await this._defaultRepository.FindAsync(w => w.ApplicationToken == applicationToken);
+
         /// <summary>
         /// 获取微信用户信息
         /// </summary>

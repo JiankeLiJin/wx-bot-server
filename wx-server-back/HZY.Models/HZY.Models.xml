@@ -1365,9 +1365,14 @@
              应用Token => 备注: 应用Token
             </summary>
         </member>
-        <member name="P:HZY.Models.Entities.WxSayEveryDay.ReceivingObjectId">
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.ReceivingObjectWxId">
             <summary>
-             接受对象(联系人Id) => 备注: 接受对象(联系人Id)
+             接受对象(wxId,用逗号隔开) => 备注: 接受对象(wxId,用逗号隔开)
+            </summary>
+        </member>
+        <member name="P:HZY.Models.Entities.WxSayEveryDay.ReceivingObjectName">
+            <summary>
+             接受对象(wxName,用逗号隔开) => 备注: 接受对象(wxName,用逗号隔开)
             </summary>
         </member>
         <member name="P:HZY.Models.Entities.WxSayEveryDay.SendTime">
@@ -1425,6 +1430,11 @@
              发送时间(cron表达式) => 备注: 发送时间(cron表达式)
             </summary>
         </member>
+        <member name="P:HZY.Models.Entities.WxTimedTask.ClosingRemarks">
+            <summary>
+             结尾备注 => 备注: 结尾备注
+            </summary>
+        </member>
         <member name="T:HZY.Models.Enums.EMatchType">
             <summary>
             机器人回复关键字匹配类型 枚举
@@ -1446,6 +1456,12 @@
             <summary>
             聊天机器人类型 枚举
             </summary>
+        </member>
+        <member name="T:HZY.Models.VO.TianXing.TianXingResponse`1">
+            <summary>
+            天行接口响应 TianXingResponse
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
     </members>
 </doc>

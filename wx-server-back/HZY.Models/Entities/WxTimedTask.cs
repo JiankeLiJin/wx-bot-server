@@ -45,6 +45,10 @@ namespace HZY.Models.Entities
         ///  发送时间(cron表达式) => 备注: 发送时间(cron表达式)
         /// </summary>
         public String SendTime { get; set; }
+        /// <summary>
+        ///  结尾备注 => 备注: 结尾备注
+        /// </summary>
+        public String ClosingRemarks { get; set; }
 
     }
 }

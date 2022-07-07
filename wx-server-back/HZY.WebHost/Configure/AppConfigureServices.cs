@@ -23,6 +23,7 @@ using System.Text.Json;
 using HZY.Infrastructure.TextJson;
 using Swashbuckle.AspNetCore.Filters;
 using Newtonsoft.Json.Serialization;
+using HZY.Services.Admin.WxBot.Http;
 
 namespace HZY.WebHost.Configure;
 
@@ -219,6 +220,9 @@ public class AppConfigureServices
 
         // 本地消息队列
         services.AddMemoryMQ();
+
+        //注入AddHttpClient
+        services.AddHttpClient<TianXingService>();
 
     }
 }

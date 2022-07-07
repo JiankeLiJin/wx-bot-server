@@ -17,8 +17,8 @@ namespace HZY.Models.Enums
         WBNR = 1,
         [Description("新闻咨询")]
         XWZX = 2,
-        [Description("最新疫情")]
-        ZXYQ = 3,
+        [Description("故事大全")]
+        GSDQ = 3,
         [Description("土味情话")]
         TWQH = 4,
         [Description("笑话大全")]

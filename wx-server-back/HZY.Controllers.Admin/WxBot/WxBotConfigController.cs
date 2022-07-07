@@ -25,7 +25,7 @@ using HZY.Models.DTO.WxBot;
 namespace HZY.Controllers.Admin
 {
     /// <summary>
-    /// 微信联系人 控制器
+    /// 微信机器人配置 控制器
     /// </summary>
     [ControllerDescriptor(MenuId = "39", DisplayName = "微信联系人")]
     [ApiExplorerSettings(GroupName = nameof(ApiVersions.WxBot))]
@@ -69,5 +69,8 @@ namespace HZY.Controllers.Admin
         [ApiCheckModel]
         [HttpGet("WxUserInfo")]
         public WxUserInfoDTO GetWxUserInfo() => this._defaultService.GetWxUserInfo();
+
+
+
     }
 }

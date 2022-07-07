@@ -948,6 +948,68 @@
             <param name="search"></param>
             <returns></returns>
         </member>
+        <member name="T:HZY.Services.Admin.WxBot.Http.TianXingService">
+            <summary>
+            天行接口服务
+            </summary>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetBotReplyAsync(System.String,System.String,System.String)">
+            <summary>
+            获取机器人回复
+            </summary>
+            <param name="key">天行key</param>
+            <param name="question">提问（建议urlencode）</param>
+            <param name="uniqueid">用户唯一身份ID，方便上下文关联</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetWeatherAsync(System.String,System.String)">
+            <summary>
+            获取天气
+            </summary>
+            <param name="key">天行key</param>
+            <param name="city">城市</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetJokesAsync(System.String,System.String)">
+            <summary>
+            获取笑话
+            </summary>
+            <param name="key">天行key</param>
+            <param name="num">返回数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetStoryAsync(System.String,System.String,System.String)">
+            <summary>
+            获取故事
+            </summary>
+            <param name="key">天行key</param>
+            <param name="type">故事类型，成语1、睡前2、童话3、寓言4</param>
+            <param name="num">返回数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetLoveWordsAsync(System.String)">
+            <summary>
+            获取情话
+            </summary>
+            <param name="key">天行key</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetNewsAsync(System.String,System.String,System.String)">
+            <summary>
+            获取一个新闻
+            </summary>
+            <param name="key">天行key</param>
+            <param name="num">获取条数</param>
+            <param name="col">新闻频道id</param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetDayOneAsync(System.String)">
+            <summary>
+            获取每日一句
+            </summary>
+            <param name="key">天行key</param>
+            <returns></returns>
+        </member>
         <member name="T:HZY.Services.Admin.WxBotConfigService">
             <summary>
             微信联系人 服务 WxBotConfigService
@@ -966,11 +1028,18 @@
             <param name="form">form</param>
             <returns></returns>
         </member>
+        <member name="M:HZY.Services.Admin.WxBotConfigService.GetClientWxBotConfigAsync(System.String)">
+            <summary>
+            客户端获取微信机器人配置
+            </summary>
+            <param name="applicationToken">应用token</param>
+            <returns></returns>
+        </member>
         <member name="M:HZY.Services.Admin.WxBotConfigService.GetWxBotConfigAsync(System.String)">
             <summary>
             获取微信机器人配置
             </summary>
-            <param name="applicationToken">应用token</param>
+            <param name="applicationToken"></param>
             <returns></returns>
         </member>
         <member name="M:HZY.Services.Admin.WxBotConfigService.GetWxUserInfo">
@@ -1096,6 +1165,14 @@
             导出Excel
             </summary>
             <param name="search"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxSayEveryDayService.GetSayEveryDayTextAsync(System.String,System.Guid)">
+            <summary>
+            获取每日说文本
+            </summary>
+            <param name="applicationToken">应用token</param>
+            <param name="everyDayId">每日说id</param>
             <returns></returns>
         </member>
         <member name="T:HZY.Services.Admin.WxTimedTaskService">

@@ -702,7 +702,7 @@
         </member>
         <member name="T:HZY.Controllers.Admin.WxBotConfigController">
             <summary>
-            微信联系人 控制器
+            微信机器人配置 控制器
             </summary>
         </member>
         <member name="M:HZY.Controllers.Admin.WxBotConfigController.FindFormAsync">
@@ -819,13 +819,6 @@
             保存
             </summary>
             <param name="form">form</param>
-            <returns></returns>
-        </member>
-        <member name="M:HZY.Controllers.Admin.WxSayEveryDayController.ExportExcelAsync(HZY.Models.Entities.WxSayEveryDay)">
-            <summary>
-            导出Excel
-            </summary>
-            <param name="search"></param>
             <returns></returns>
         </member>
         <member name="T:HZY.Controllers.Admin.WxTimedTaskController">

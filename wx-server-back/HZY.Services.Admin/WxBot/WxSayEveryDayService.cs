@@ -17,6 +17,7 @@ using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
+using HZY.Services.Admin.WxBot.Http;
 
 namespace HZY.Services.Admin
 {
@@ -25,10 +26,13 @@ namespace HZY.Services.Admin
     /// </summary>
     public class WxSayEveryDayService : AdminBaseService<IAdminRepository<WxSayEveryDay>>
     {
-        public WxSayEveryDayService(IAdminRepository<WxSayEveryDay> defaultRepository) 
+        private readonly TianXingService _tianXingService;
+        private readonly IAdminRepository<WxBotConfig> _wxBotConfigRepository;
+        public WxSayEveryDayService(IAdminRepository<WxSayEveryDay> defaultRepository, TianXingService tianXingService, IAdminRepository<WxBotConfig> wxBotConfigRepository)
             : base(defaultRepository)
         {
-
+            _tianXingService = tianXingService;
+            _wxBotConfigRepository = wxBotConfigRepository;
         }
 
         /// <summary>
@@ -45,7 +49,13 @@ namespace HZY.Services.Admin
                     .Select(w => new
                     {
                         w.Id,
-                        w.ApplicationToken,w.ReceivingObjectId,w.SendTime,w.City,w.ClosingRemarks,w.AnniversaryDay,
+                        w.ApplicationToken,
+                        w.ReceivingObjectWxId,
+                        w.ReceivingObjectName,
+                        w.SendTime,
+                        w.City,
+                        w.ClosingRemarks,
+                        AnniversaryDay = w.AnniversaryDay.ToString("yyyy-MM-dd"),
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
                         CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
                     })
@@ -72,7 +82,7 @@ namespace HZY.Services.Admin
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        public async Task<Dictionary<string,object>> FindFormAsync(Guid id)
+        public async Task<Dictionary<string, object>> FindFormAsync(Guid id)
         {
             var res = new Dictionary<string, object>();
             var form = await this._defaultRepository.FindByIdAsync(id);
@@ -103,8 +113,67 @@ namespace HZY.Services.Admin
             var tableViewModel = await this.FindListAsync(0, 0, search);
             return this.ExportExcelByPagingView(tableViewModel, null, "Id");
         }
+        /// <summary>
+        /// 获取每日说文本
+        /// </summary>
+        /// <param name="applicationToken">应用token</param>
+        /// <param name="everyDayId">每日说id</param>
+        /// <returns></returns>
+        public async Task<string> GetSayEveryDayTextAsync(string applicationToken, Guid everyDayId)
+        {
+            //获取机器人
+            WxBotConfig wxBotConfig = await _wxBotConfigRepository.FindAsync(w => w.ApplicationToken == applicationToken);
+            WxSayEveryDay wxSayEveryDay = await this._defaultRepository.FindByIdAsync(everyDayId);
+            if (wxSayEveryDay == null) return "";
+            //获取天气
+            string weather = await _tianXingService.GetWeatherAsync(wxBotConfig.TianXingApiKey, wxSayEveryDay.City);
+            //获取每日一句
+            string dayOne = await _tianXingService.GetDayOneAsync(wxBotConfig.TianXingApiKey);
+            //获取情话
+            string loveWords = await _tianXingService.GetLoveWordsAsync(wxBotConfig.TianXingApiKey);
+            //计算在一起多少天
+            int days = (DateTime.Now.Date - wxSayEveryDay.AnniversaryDay.Date).Days;
+            string result = $"{DateTime.Now:yyyy-MM-dd HH:mm} 星期二{ToWeek(DateTime.Now.DayOfWeek)}\n 今天是我们在一起的第{days}天" +
+                $"\n元气满满的一天开始啦,要开心噢^_^" +
+                $"\n\n今日天气" +
+                $"\n{weather}" +
+                $"\n\n每日一句" +
+                $"\n{dayOne}" +
+                $"\n\n情话对你说" +
+                $"\n{loveWords}" +
+                $"\n————————{wxSayEveryDay.ClosingRemarks}";
+            return result;
+        }
 
-
+        private string ToWeek(DayOfWeek weekName)
+        {
+            string week = "";
+            switch (weekName)
+            {
+                case DayOfWeek.Sunday:
+                    week = "星期日";
+                    break;
+                case DayOfWeek.Monday:
+                    week = "星期一";
+                    break;
+                case DayOfWeek.Tuesday:
+                    week = "星期二";
+                    break;
+                case DayOfWeek.Wednesday:
+                    week = "星期三";
+                    break;
+                case DayOfWeek.Thursday:
+                    week = "星期四";
+                    break;
+                case DayOfWeek.Friday:
+                    week = "星期五";
+                    break;
+                case DayOfWeek.Saturday:
+                    week = "星期五";
+                    break;
+            }
+            return week;
+        }
 
     }
 }

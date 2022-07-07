@@ -17,6 +17,8 @@ using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
+using HZY.Services.Admin.WxBot.Http;
+using HZY.Models.Enums;
 
 namespace HZY.Services.Admin
 {
@@ -25,10 +27,15 @@ namespace HZY.Services.Admin
     /// </summary>
     public class WxKeywordReplyService : AdminBaseService<IAdminRepository<WxKeywordReply>>
     {
-        public WxKeywordReplyService(IAdminRepository<WxKeywordReply> defaultRepository)
+        private readonly TianXingService _tianXingService;
+        private readonly IAdminRepository<WxBotConfig> _wxBotConfigRepository;
+        public WxKeywordReplyService(IAdminRepository<WxKeywordReply> defaultRepository,
+            TianXingService tianXingService,
+              IAdminRepository<WxBotConfig> wxBotConfigRepository)
             : base(defaultRepository)
         {
-
+            _tianXingService = tianXingService;
+            _wxBotConfigRepository = wxBotConfigRepository;
         }
 
         /// <summary>
@@ -111,7 +118,46 @@ namespace HZY.Services.Admin
             return this.ExportExcelByPagingView(tableViewModel, null, "Id");
         }
 
+        public async Task<string> KeywordReply(string applicationToken, string keyword)
+        {
+            WxBotConfig wxBotConfig = await _wxBotConfigRepository.FindAsync(w => w.ApplicationToken == applicationToken);
+            List<WxKeywordReply> keywordReplys = this._defaultRepository.Select.Where(w => w.ApplicationToken == applicationToken)
+                .Where(w => w.KeyWord.Contains(keyword)).ToList();
+            if (keywordReplys != null && keywordReplys.Count > 0)
+            {
+                //精确匹配优先级高于模糊匹配
+                WxKeywordReply jqReply = keywordReplys.FirstOrDefault(w => w.MatchType == EMatchType.JINGQUE);
+                if (jqReply != null)
+                {
+                    return await Reply(wxBotConfig.TianXingApiKey, jqReply);
+                }
+                else
+                {
+                    WxKeywordReply mhReply = keywordReplys.FirstOrDefault(w => w.MatchType == EMatchType.MOHU);
+                    return await Reply(wxBotConfig.TianXingApiKey, mhReply);
+                }
+            }
+            return null;
 
+        }
 
+        private async Task<string> Reply(string tianxingKey, WxKeywordReply reply)
+        {
+            switch (reply.SendType)
+            {
+                case ETimedTaskSendType.WBNR:
+                    return reply.SendContent;
+                case ETimedTaskSendType.XWZX:
+                    return await _tianXingService.GetNewsAsync(tianxingKey);
+                case ETimedTaskSendType.GSDQ:
+                    return await _tianXingService.GetStoryAsync(tianxingKey);
+                case ETimedTaskSendType.TWQH:
+                    return await _tianXingService.GetLoveWordsAsync(tianxingKey);
+                case ETimedTaskSendType.XHDQ:
+                    return await _tianXingService.GetJokesAsync(tianxingKey);
+                default:
+                    return "你太厉害了，说的话把我难倒了，我要去学习了，不然没法回答你的问题";
+            }
+        }
     }
 }

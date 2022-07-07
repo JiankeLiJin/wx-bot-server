@@ -43,7 +43,7 @@
               >
                 <a-select-option :value="1">文本内容</a-select-option>
                 <a-select-option :value="2">新闻咨询</a-select-option>
-                <a-select-option :value="3">最新疫情</a-select-option>
+                <a-select-option :value="3">故事大全</a-select-option>
                 <a-select-option :value="4">土味情话</a-select-option>
                 <a-select-option :value="5">笑话大全</a-select-option>
               </a-select>
@@ -65,6 +65,14 @@
                 placeholder="请输入 发送时间(cron表达式)"
               />
               <a target="_blank" href="https://www.bejson.com/othertools/cron/">生成cron</a>
+            </a-form-item>
+          </a-col>
+          <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <a-form-item label="结尾备注" name="closingRemarks">
+              <a-input
+                v-model:value="state.vm.form.closingRemarks"
+                placeholder="请输入 结尾备注"
+              />
             </a-form-item>
           </a-col>
         </a-row>

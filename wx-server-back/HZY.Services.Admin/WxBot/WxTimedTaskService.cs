@@ -58,6 +58,7 @@ namespace HZY.Services.Admin
                         SendTypeText= w.SendType.ToDescriptionOrString(),
                         w.SendContent,
                         w.SendTime,
+                        w.ClosingRemarks,
                         LastModificationTime = w.LastModificationTime.ToString("yyyy-MM-dd"),
                         CreationTime = w.CreationTime.ToString("yyyy-MM-dd")
                     })

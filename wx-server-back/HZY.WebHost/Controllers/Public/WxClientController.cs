@@ -7,6 +7,7 @@ using HZY.Models.DTO.WxBot;
 using HZY.Models.Entities;
 using HZY.Services.Admin;
 using HZY.Services.Admin.Framework;
+using HZY.Services.Admin.WxBot.Http;
 using HZY.WebHost.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -29,13 +30,22 @@ public class WxClientController : ControllerBase
     private readonly IMemoryCache _cache;
     private readonly WxContactService _wxContactService;
     private readonly WxBotConfigService _wxBotConfigService;
-
-
-    public WxClientController(WxContactService wxContactService, WxBotConfigService wxBotConfigService, IMemoryCache memoryCache)
+    private readonly WxSayEveryDayService _wxSayEveryDayService;
+    private readonly WxKeywordReplyService _wxKeywordReplyService;
+    private readonly TianXingService _tianXingService;
+    public WxClientController(WxContactService wxContactService,
+        WxBotConfigService wxBotConfigService,
+        IMemoryCache memoryCache,
+        WxSayEveryDayService wxSayEveryDayService,
+        WxKeywordReplyService wxKeywordReplyService,
+        TianXingService tianXingService)
     {
         _wxContactService = wxContactService;
         _wxBotConfigService = wxBotConfigService;
         _cache = memoryCache;
+        _wxSayEveryDayService = wxSayEveryDayService;
+        _wxKeywordReplyService = wxKeywordReplyService;
+        _tianXingService = tianXingService;
     }
 
     /// <summary>
@@ -45,7 +55,7 @@ public class WxClientController : ControllerBase
     /// <param name="applicationToken">应用token</param>
     /// <returns></returns>
     [ApiCheckModel]
-    [HttpPost("save-contacts/{applicationToken}")]
+    [HttpPost("contacts/{applicationToken}")]
     public async Task<int> SaveContactsAsync([FromBody] List<WxContact> contacts, [FromRoute] string applicationToken)
     {
         return await _wxContactService.SaveContactsAsync(contacts, applicationToken);
@@ -55,11 +65,10 @@ public class WxClientController : ControllerBase
     /// </summary>
     /// <param name="applicationToken">应用token</param>
     /// <returns></returns>
-    [ApiCheckModel]
     [HttpGet("wx-confg/{applicationToken}")]
-    public async Task<string> GetWxBotConfigAsync([FromRoute] string applicationToken)
+    public async Task<dynamic> GetWxBotConfigAsync([FromRoute] string applicationToken)
     {
-        return await this._wxBotConfigService.GetWxBotConfigAsync(applicationToken);
+        return await this._wxBotConfigService.GetClientWxBotConfigAsync(applicationToken);
     }
 
 
@@ -77,5 +86,42 @@ public class WxClientController : ControllerBase
         _cache.Set(string.Format(CacheKeyConsts.WxUserInfoKey, applicationToken), wxUserInfo, TimeSpan.FromSeconds(30));
         return true;
 
+    }
+
+    /// <summary>
+    /// 获取每日说文本
+    /// </summary>
+    /// <param name="applicationToken">应用token</param>
+    /// <param name="everyDayId">每日说id</param>
+    /// <returns></returns>
+    [HttpGet("say-every-day/{applicationToken}")]
+    public async Task<string> GetSayEveryDayTextAsync([FromRoute] string applicationToken, [FromQuery] Guid everyDayId)
+    {
+        return await this._wxSayEveryDayService.GetSayEveryDayTextAsync(applicationToken, everyDayId);
+    }
+    /// <summary>
+    /// 关键词回复
+    /// </summary>
+    /// <param name="applicationToken">应用token</param>
+    /// <param name="keyword">关键词</param>
+    /// <returns></returns>
+    [HttpGet("Keyword-reply/{applicationToken}")]
+    public async Task<string> KeywordReplyAsync([FromRoute] string applicationToken, [FromQuery] string keyword)
+    {
+        return await this._wxKeywordReplyService.KeywordReply(applicationToken, keyword);
+    }
+
+    /// <summary>
+    /// 机器人回复
+    /// </summary>
+    /// <param name="applicationToken">应用token</param>
+    /// <param name="keyword">关键词</param>
+    /// <param name="uniqueid">用户唯一身份ID，方便上下文关联</param>
+    /// <returns></returns>
+    [HttpGet("bot-reply/{applicationToken}")]
+    public async Task<string> GetBotReplyAsync([FromRoute] string applicationToken, [FromQuery] string keyword, [FromQuery] string uniqueid)
+    {
+        WxBotConfig wxBotConfig = await _wxBotConfigService.GetWxBotConfigAsync(applicationToken);
+        return await this._tianXingService.GetBotReplyAsync(wxBotConfig.TianXingApiKey, keyword, uniqueid);
     }
 }

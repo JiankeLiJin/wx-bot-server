@@ -34,6 +34,12 @@ import rp from 'request-promise'
  */
 let userInfo = "";
 
+let wxBotConfig = {
+  wxBotConfig: {},
+  timedTasks: [],
+  sayEveryDays: [],
+};
+
 /**
 * 常量定义
 * @type {string}
@@ -100,9 +106,17 @@ function onScan(payload: PUPPET.payloads.EventScan) {
   }
 }
 
-function onLogin(payload: PUPPET.payloads.EventLogin) {
+async function onLogin(payload: PUPPET.payloads.EventLogin) {
   console.info(`${payload.contactId} login`)
-  handleGetPerson()
+  //上传用户信息
+  await updateWxUserInfo();
+  //上传联系人
+  await updateContacts();
+  //获取平台配置 定时任务 每日说 等
+  // @ts-ignore
+  console.log("3s后启动定时任务,每日说...");
+  setTimeout(async () => await startTask(), 3000);
+
 }
 
 function onLogout(payload: PUPPET.payloads.EventLogout) {
@@ -160,18 +174,6 @@ async function onMessage({
   handleRecvMsg({ wxid, content, room });
 }
 
-/**
- * 获取用户信息处理函数
- */
-async function handleGetPerson() {
-  //上传用户信息
-  await updateWxUserInfo();
-  //上传联系人
-  await updateContacts();
-  //获取平台配置 定时任务 每日说 等
-  // @ts-ignore
-  console.log("更新完成,")
-}
 /**
  * 消息处理函数
  * @param j
@@ -246,7 +248,7 @@ async function updateContacts() {
   // @ts-ignore
   const contacts = JSON.parse(await puppet.sidecar.getContact())
   console.log(`联系人有${contacts.length}个`);
-  let res = await PostRequest(WECHAT_URL + `/save-contacts/${APPLICTION_TOKEN}`, contacts.map(c => ({
+  let res = await PostRequest(WECHAT_URL + `/contacts/${APPLICTION_TOKEN}`, contacts.map(c => ({
     wxId: c.id,
     wxCode: c.code,
     name: c.name,
@@ -262,10 +264,26 @@ async function updateContacts() {
     console.log("上传联系人失败!,响应结果:", res);
   }
 }/**
- * 处理机器人配置 定时任务 每日说 等
+ * 启动 定时任务 每日说 等
  */
-async function handerBotConfig() {
-  
+async function startTask() {
+  //获取机器人配置
+  let res = await GetRequest(WECHAT_URL + `/wx-confg/${APPLICTION_TOKEN}`);
+  if (res && res.code == 1) {
+    wxBotConfig = res.data;
+    console.log("获取机器人配置成功!,响应结果:", res);
+    //启动定时任务
+    if (wxBotConfig.timedTasks) {
+
+    }
+    //启动每日说
+    if (wxBotConfig.sayEveryDays) {
+
+    }
+  }
+  else {
+    console.log("获取机器人配置失败!,响应结果:", res);
+  }
 }
 
 
