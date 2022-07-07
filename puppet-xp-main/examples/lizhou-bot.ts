@@ -261,6 +261,11 @@ async function updateContacts() {
   else {
     console.log("上传联系人失败!,响应结果:", res);
   }
+}/**
+ * 处理机器人配置 定时任务 每日说 等
+ */
+async function handerBotConfig() {
+  
 }
 
 
