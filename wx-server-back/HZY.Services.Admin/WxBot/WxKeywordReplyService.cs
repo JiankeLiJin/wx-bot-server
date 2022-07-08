@@ -117,7 +117,12 @@ namespace HZY.Services.Admin
             var tableViewModel = await this.FindListAsync(0, 0, search);
             return this.ExportExcelByPagingView(tableViewModel, null, "Id");
         }
-
+        /// <summary>
+        /// 关键词回复
+        /// </summary>
+        /// <param name="applicationToken">applicationToken</param>
+        /// <param name="keyword">关键字</param>
+        /// <returns></returns>
         public async Task<string> KeywordReply(string applicationToken, string keyword)
         {
             WxBotConfig wxBotConfig = await _wxBotConfigRepository.FindAsync(w => w.ApplicationToken == applicationToken);
@@ -126,7 +131,8 @@ namespace HZY.Services.Admin
             if (keywordReplys != null && keywordReplys.Count > 0)
             {
                 //精确匹配优先级高于模糊匹配
-                WxKeywordReply jqReply = keywordReplys.FirstOrDefault(w => w.MatchType == EMatchType.JINGQUE);
+                WxKeywordReply jqReply = keywordReplys.FirstOrDefault(w => w.MatchType == EMatchType.JINGQUE
+                && w.KeyWord.Split(",").Contains(keyword));
                 if (jqReply != null)
                 {
                     return await _tianXingService.GetSendContentAsync(wxBotConfig.TianXingApiKey, (jqReply.SendType, jqReply.SendContent));

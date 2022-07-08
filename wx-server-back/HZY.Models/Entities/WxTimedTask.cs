@@ -32,7 +32,7 @@ namespace HZY.Models.Entities
         /// <summary>
         ///  发送类型 => 备注: 发送类型
         /// </summary>
-        public ETimedTaskSendType SendType { get; set; }
+        public ETimedTaskSendType SendType { get; set; } = ETimedTaskSendType.WBNR;
 
 
         /// <summary>

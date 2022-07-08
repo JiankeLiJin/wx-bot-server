@@ -19,6 +19,8 @@ using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
 using HZY.Models.Enums;
 using HZY.Services.Admin.WxBot.Http;
+using HZY.Infrastructure.ApiResultManage;
+using Quartz;
 
 namespace HZY.Services.Admin
 {
@@ -118,6 +120,7 @@ namespace HZY.Services.Admin
         /// <returns></returns>
         public Task<WxTimedTask> SaveFormAsync(WxTimedTask form)
         {
+            if (!CronExpression.IsValidExpression(form.SendTime)) MessageBox.Show("cron表达式不合法,请重新生成");
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
 

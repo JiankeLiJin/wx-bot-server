@@ -20,7 +20,7 @@ namespace HZY.Models.Entities
         /// <summary>
         ///  发送类型 => 备注: 发送类型
         /// </summary>
-        public ETimedTaskSendType SendType { get; set; }
+        public ETimedTaskSendType SendType { get; set; } = ETimedTaskSendType.WBNR;
 
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace HZY.Models.Entities
         /// <summary>
         ///  匹配类型(模糊匹配,精确匹配) => 备注: 匹配类型(模糊匹配,精确匹配)
         /// </summary>
-        public EMatchType MatchType { get; set; }
+        public EMatchType MatchType { get; set; } = EMatchType.MOHU;
 
 
     }

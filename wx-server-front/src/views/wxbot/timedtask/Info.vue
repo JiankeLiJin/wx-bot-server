@@ -64,7 +64,9 @@
                 v-model:value="state.vm.form.sendTime"
                 placeholder="请输入 发送时间(cron表达式)"
               />
-              <a target="_blank" href="https://www.bejson.com/othertools/cron/">生成cron</a>
+              <a target="_blank" href="https://www.bejson.com/othertools/cron/"
+                >生成cron</a
+              >
             </a-form-item>
           </a-col>
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -119,7 +121,6 @@ const methods = {
       return tools.message("接收对象必填!", "警告");
     if (!state.vm.form.sendTime) return tools.message("发送时间必填!", "警告");
     if (!state.vm.form.sendType) return tools.message("发送类型必填!", "警告");
-    state.saveLoading = true;
     state.vm.form.applicationToken = appStore.getApplicationToken();
     state.vm.form.receivingObjectWxId = state.vm.receivingObjects
       .map((r) => r.value)
@@ -127,7 +128,7 @@ const methods = {
     state.vm.form.receivingObjectName = state.vm.receivingObjects
       .map((r) => r.label)
       .join(",");
-    console.log("保存对象：", state.vm.form);
+    state.saveLoading = true;
     service.saveForm(state.vm.form).then((res) => {
       state.saveLoading = false;
       if (res.code != 1) return;

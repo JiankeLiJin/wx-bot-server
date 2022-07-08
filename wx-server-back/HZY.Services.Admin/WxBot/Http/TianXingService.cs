@@ -185,7 +185,7 @@ namespace HZY.Services.Admin.WxBot.Http
         }
 
         /// <summary>
-        /// 获取一个新闻
+        /// 获取新闻咨询
         /// </summary>
         /// <param name="key">天行key</param>
         /// <param name="num">获取条数</param>
@@ -200,7 +200,15 @@ namespace HZY.Services.Admin.WxBot.Http
                 parmars.Add("num", num);
                 parmars.Add("col", col);
                 var jObject = await GetAsync("/allnews/index", parmars);
-                return jObject == null ? defaultNews : jObject["newslist"][0]["word"].ToString();
+                if (jObject == null) return defaultNews;
+                StringBuilder newsText = new();
+                for (int i = 0; i < jObject["newslist"].Count(); i++)
+                {
+                    newsText.AppendLine($"{i}、{jObject["newslist"][i]["word"].ToString()}");
+                }
+                return newsText.ToString();
+
+                //拼装新闻
             }
             catch (Exception ex)
             {

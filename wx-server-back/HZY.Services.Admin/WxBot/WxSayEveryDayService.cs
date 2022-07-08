@@ -18,6 +18,8 @@ using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
 using HZY.Services.Admin.WxBot.Http;
+using Quartz;
+using HZY.Infrastructure.ApiResultManage;
 
 namespace HZY.Services.Admin
 {
@@ -87,9 +89,15 @@ namespace HZY.Services.Admin
             var res = new Dictionary<string, object>();
             var form = await this._defaultRepository.FindByIdAsync(id);
             form = form.NullSafe();
-
+            var receivingObjectWxIds = form.ReceivingObjectWxId?.Split(",");
+            var receivingObjectNames = form.ReceivingObjectName?.Split(",");
             res[nameof(id)] = id == Guid.Empty ? "" : id;
             res[nameof(form)] = form;
+            res["receivingObjects"] = receivingObjectWxIds?.Select((t, index) => new
+            {
+                value = t,
+                label = receivingObjectNames?[index]
+            });
             return res;
         }
 
@@ -100,6 +108,7 @@ namespace HZY.Services.Admin
         /// <returns></returns>
         public Task<WxSayEveryDay> SaveFormAsync(WxSayEveryDay form)
         {
+            if (!CronExpression.IsValidExpression(form.SendTime)) MessageBox.Show("cron表达式不合法,请重新生成");
             return this._defaultRepository.InsertOrUpdateAsync(form);
         }
 

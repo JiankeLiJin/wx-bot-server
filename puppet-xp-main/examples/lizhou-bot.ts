@@ -28,6 +28,8 @@ import schedule from 'node-schedule'
 // @ts-ignore
 import rp from 'request-promise'
 
+
+
 /**
  * 变量定义
  * @type {string}
@@ -40,7 +42,10 @@ let botConfig = {
   sayEveryDays: [],
 };
 /**本地开启私聊的微信id */
-let privateChatWxIds: any[] = [];
+let privateChatwxIds: any[] = [];
+
+//正在运行的定时任务名称
+let runScheduleNames: any[] = [];
 
 /**
 * 常量定义
@@ -109,15 +114,8 @@ function onScan(payload: PUPPET.payloads.EventScan) {
 }
 
 async function onLogin(payload: PUPPET.payloads.EventLogin) {
-  console.info(`${payload.contactId} login`)
-  //上传用户信息
-  // await updateWxUserInfo();
-  //上传联系人
-  // await updateContacts();
-  //获取平台配置 定时任务 每日说 等
-  // @ts-ignore
-  console.log("3s后启动定时任务,每日说...");
-  setTimeout(async () => await startTask(), 3000);
+  console.info(`${payload.contactId} 已登录`)
+  await reloadConfig();
 
 }
 
@@ -147,41 +145,84 @@ async function onMessage({
     talkerId,
     roomId,
     text,
+    type,
   } = await puppet.messagePayload(messageId)
-  let wxid = talkerId;
+  console.log({ talkerId, roomId, text, type });
+  let wxId = talkerId;
   let room = roomId;
   let content = text;
-  handleRecvMsg({ wxid, content, room });
+  handleRecvMsg({ wxId, content, room });
 }
 
 /**
  * 消息处理函数
- * @param j { wxid, content, room }
+ * @param j { wxId, content, room }
  */
 // @ts-ignore
 async function handleRecvMsg(j) {
   let content = j.content;
-
   //判断是群消息还是个人消息
   if (j.room != null && j.room != '') {
     // @ts-ignore
-    let mentionSelf = content.includes(`@${userInfo.wxName}`);
+    let mentionSelf = content.includes(`@${userInfo.name}`);
     //判断是否是@我的消息
     if (mentionSelf) {
       content = content.replace(/@[^,，：:\s@]+/g, '').trim();
       console.log("消息内容：", content);
+      //是否开启群聊自动回复
+      // @ts-ignore
+      if (botConfig.wxBotConfig.groupAutoReplyFlag == 1) {
+        // @ts-ignore
+        const nick = await puppet.sidecar.getChatroomMemberNickInfo(j.wxId, j.room);
+        if (content == null || content == '') {
+          content = "1.毒鸡汤(发送“毒鸡汤”，随机干了这碗鸡汤)\n"
+            + "2.天气查询(发送“上海天气”，查询Ta的天气)\n"
+            + "3.故事大全(发送“故事、讲个故事”，即可随机获得一个故事)\n"
+            + "4.成语接龙(发送“成语接龙”，即可进入成语接龙模式)\n"
+            + "5.歇后语(发送“歇后语”，返回短小风趣又像谜语的句子)\n"
+            + "6.笑话大全(发送“笑话、讲个笑话”，让我陪你笑开心)\n"
+            + "7.土味情话(发送“情话、讲个情话”，让我陪你撩心里的TA)\n"
+            + "8.顺口溜(发送“顺口溜”，好听的民俗有趣的轶事)\n"
+            + "9.舔狗日记(发送“舔狗”，随机返回一个舔狗日记)\n"
+            + "10.彩虹屁(发送“彩虹屁”，随机返回一个彩虹屁句子)\n\n";
+          // @ts-ignore
+          await puppet.sidecar.sendAtMsg(j.room, `@${nick} ${content}`,j.wxId);
+        } else {
+          //获取关键字回复
+          let replyContent = await getKeywordReply(content);
+          if (replyContent != null) {
+            console.log(`群聊关键字回复：${replyContent}`);
+            // @ts-ignore
+            await puppet.sidecar.sendAtMsg(j.room, `@${nick} ${replyContent}`, j.wxId);
+          }
+          else {
+            //调用机器人回复
+            let replyContent = await getBotReply(content, j.wxId);
+            console.log(`群聊机器人回复：${replyContent}`);
+            // @ts-ignore
+            await puppet.sidecar.sendAtMsg(j.room, `@${nick} ${replyContent}`, j.wxId);
+          }
+        }
+      }
     }
   }
   else {
     //个人消息
     // @ts-ignore
-    if (j.wxid == userInfo.wxId) return;//自己给自己发消息不处理
+    if (j.wxId == userInfo.wxId) return;//自己给自己发消息不处理
+    //更新配置拦截
+    if (content.indexOf("更新配置") > -1) {
+      await reloadConfig();
+      // @ts-ignore
+      await puppet.sidecar.sendMsg(j.wxId, `配置更新成功`);
+    }
+
     if (content.indexOf("关闭私聊") > -1) {
-      if (privateChatWxIds.includes(j.wxid)) {
-        privateChatWxIds.splice(privateChatWxIds.indexOf(j.wxid), 1);
-        console.log(`${j.wxid}私聊已关闭`);
+      if (privateChatwxIds.includes(j.wxId)) {
+        privateChatwxIds.splice(privateChatwxIds.indexOf(j.wxId), 1);
+        console.log(`${j.wxId}私聊已关闭`);
         // @ts-ignore
-        await puppet.sidecar.sendMsg(j.wxid, "好的,不聊了!");
+        await puppet.sidecar.sendMsg(j.wxId, "好的,不聊了!");
         return;
       }
     }
@@ -190,36 +231,53 @@ async function handleRecvMsg(j) {
       // @ts-ignore
       if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 0) {
         // @ts-ignore
-        await puppet.sidecar.sendMsg(j.wxid, "主人设置不允许和你聊天了!");
+        await puppet.sidecar.sendMsg(j.wxId, "主人设置不允许和你聊天了!");
         return;
       }
-      if (!privateChatWxIds.includes(j.wxid)) {
-        privateChatWxIds.push(j.wxid);
-        console.log(`${j.wxid}私聊已开启`);
+      if (!privateChatwxIds.includes(j.wxId)) {
+        privateChatwxIds.push(j.wxId);
+        console.log(`${j.wxId}私聊已开启`);
       }
     }
     // @ts-ignore
-    if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 1 && privateChatWxIds.includes(j.wxid)) {
+    if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 1 && privateChatwxIds.includes(j.wxId)) {
       //获取关键字回复
-      let replyContent= await getKeywordReply(content);
-      if(replyContent!=null){
-        console.log(`关键字回复给：${replyContent}`);
+      let replyContent = await getKeywordReply(content);
+      if (replyContent != null) {
+        console.log(`关键字回复：${replyContent}`);
         // @ts-ignore
-        await puppet.sidecar.sendMsg(j.wxid,replyContent);
+        await puppet.sidecar.sendMsg(j.wxId, replyContent);
       }
-      else{
+      else {
         //调用机器人回复
-       let replyContent= await getBotReply(content, j.wxid);
-       console.log(`关键字回复给：${replyContent}`);
-       // @ts-ignore
-       await puppet.sidecar.sendMsg(j.wxid,replyContent);
+        let replyContent = await getBotReply(content, j.wxId);
+        console.log(`机器人回复：${replyContent}`);
+        // @ts-ignore
+        await puppet.sidecar.sendMsg(j.wxId, replyContent);
       }
 
     }
 
   }
 }
-
+/**
+ * 重新加载配置
+ */
+async function reloadConfig() {
+  //取消所有任务
+  runScheduleNames.forEach(name => {
+    console.log("取消任务：", name)
+    schedule.cancelJob(name);
+  });
+  //上传用户信息
+  await updateWxUserInfo();
+  //上传联系人
+  await updateContacts();
+  //获取平台配置 定时任务 每日说 等
+  // @ts-ignore
+  console.log("3s后启动定时任务,每日说...");
+  setTimeout(async () => await startTask(), 3000);
+}
 
 /**
  * 上传用户信息
@@ -239,8 +297,6 @@ async function updateWxUserInfo() {
         await puppet.logout();
         return;
       } else {
-        console.log("获取用户信息成功");
-        console.log("用户信息:", userInfo);
         let data = {
           // @ts-ignore
           wxId: userInfo.id,
@@ -270,7 +326,7 @@ async function updateContacts() {
   // @ts-ignore
   const contacts = JSON.parse(await puppet.sidecar.getContact())
   console.log(`联系人有${contacts.length}个`);
-  let res = await PostRequest(WECHAT_URL + `/contacts/${APPLICTION_TOKEN}`, contacts.map(c => ({
+  let res = await PostRequest(WECHAT_URL + `/contacts/${APPLICTION_TOKEN}`, contacts.map((c:any) => ({
     wxId: c.id,
     wxCode: c.code,
     name: c.name,
@@ -323,11 +379,11 @@ async function startSayEveryDay(sayEveryDays) {
           return;
         }
         //获取接收人
-        let receivingWxIds = sayEveryDay.receivingObjectWxId.split(',');
+        let receivingwxIds = sayEveryDay.receivingObjectwxId.split(',');
         let receivingWxNames = sayEveryDay.receivingObjectName.split(',');
         //循环发送消息
         // @ts-ignore
-        receivingWxIds.forEach(async (wxId, index) => {
+        receivingwxIds.forEach(async (wxId, index) => {
           console.log(`每日说任务(${sayEveryDay.id})给 ${receivingWxNames[index]} 发送消息:${sendContent}`)
           // @ts-ignore
           await puppet.sidecar.sendMsg(wxId, sendContent);
@@ -357,11 +413,11 @@ async function startTimedTask(timedTasks) {
           return;
         }
         //获取接收人
-        let receivingWxIds = task.receivingObjectWxId.split(',');
+        let receivingwxIds = task.receivingObjectwxId.split(',');
         let receivingWxNames = task.receivingObjectName.split(',');
         //循环发送消息
         // @ts-ignore
-        receivingWxIds.forEach(async (wxId, index) => {
+        receivingwxIds.forEach(async (wxId, index) => {
           console.log(`定时任务(${task.id})给 ${receivingWxNames[index]} 发送消息:${sendContent}`)
           // @ts-ignore
           await puppet.sidecar.sendMsg(wxId, sendContent);
@@ -478,15 +534,15 @@ async function GetRequest(url) {
  */
 // @ts-ignore
 function setLocalSchedule(date, callback, name) {
-  let _schedule;
   if (name) {
     schedule.cancelJob(name);//先取消该任务再重新启动
-    _schedule = schedule.scheduleJob(name, { rule: date, tz: 'Asia/Shanghai' }, callback)
-  } else {
-    _schedule = schedule.scheduleJob({ rule: date, tz: 'Asia/Shanghai' }, callback)
+    if (runScheduleNames.indexOf(name) > -1) {
+      runScheduleNames.splice(runScheduleNames.indexOf(name), 1);
+    }
+    schedule.scheduleJob(name, { rule: date, tz: 'Asia/Shanghai' }, callback)
+    runScheduleNames.push(name);
   }
 }
-
 
 /**
  *

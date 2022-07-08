@@ -91,6 +91,7 @@ public class MemberService : AdminBaseService<IAdminRepository<Member>>
     /// <returns></returns>
     public async Task<Dictionary<string, object>> FindFormAsync(Guid id)
     {
+        
         var res = new Dictionary<string, object>();
         var form = await this._defaultRepository.FindByIdAsync(id);
         form = form.NullSafe();

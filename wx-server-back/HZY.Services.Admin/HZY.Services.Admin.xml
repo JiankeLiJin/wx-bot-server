@@ -1004,7 +1004,7 @@
         </member>
         <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetNewsAsync(System.String,System.String,System.String)">
             <summary>
-            获取一个新闻
+            获取新闻咨询
             </summary>
             <param name="key">天行key</param>
             <param name="num">获取条数</param>
@@ -1131,6 +1131,14 @@
             导出Excel
             </summary>
             <param name="search"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HZY.Services.Admin.WxKeywordReplyService.KeywordReply(System.String,System.String)">
+            <summary>
+            关键词回复
+            </summary>
+            <param name="applicationToken">applicationToken</param>
+            <param name="keyword">关键字</param>
             <returns></returns>
         </member>
         <member name="T:HZY.Services.Admin.WxSayEveryDayService">
