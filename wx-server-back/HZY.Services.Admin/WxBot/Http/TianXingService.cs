@@ -204,7 +204,7 @@ namespace HZY.Services.Admin.WxBot.Http
                 StringBuilder newsText = new();
                 for (int i = 0; i < jObject["newslist"].Count(); i++)
                 {
-                    newsText.AppendLine($"{i}、{jObject["newslist"][i]["word"].ToString()}");
+                    newsText.AppendLine($"{i}、{jObject["newslist"][i]["title"].ToString()}");
                 }
                 return newsText.ToString();
 
