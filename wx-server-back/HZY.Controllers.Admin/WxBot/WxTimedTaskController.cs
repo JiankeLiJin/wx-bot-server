@@ -85,24 +85,5 @@ namespace HZY.Controllers.Admin
         {
             return this._defaultService.SaveFormAsync(form);
         }
-
-        /// <summary>
-        /// 导出Excel
-        /// </summary>
-        /// <param name="search"></param>
-        /// <returns></returns>
-        [ActionDescriptor(AdminFunctionConsts.Function_Export, DisplayName = "导出数据")]
-        [ApiResourceCacheFilter(5)]
-        [HttpPost("ExportExcel")]
-        public async Task ExportExcelAsync([FromBody] WxTimedTask search)
-        {
-            var data = await this._defaultService.ExportExcelAsync(search);
-            var name = $"{PermissionUtil.GetControllerDisplayName(this.GetType())}列表数据 {DateTime.Now.ToString("yyyy-MM-dd")}.xls";
-            base.HttpContext.DownLoadFile(data, Tools.GetFileContentType[".xls"].ToStr(), name);
-        }
-
-
-
-
     }
 }

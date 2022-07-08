@@ -953,6 +953,14 @@
             天行接口服务
             </summary>
         </member>
+        <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetSendContentAsync(System.String,System.ValueTuple{HZY.Models.Enums.ETimedTaskSendType,System.String})">
+            <summary>
+            根据发送类型获取发送内容
+            </summary>
+            <param name="key"></param>
+            <param name="sendObj"></param>
+            <returns></returns>
+        </member>
         <member name="M:HZY.Services.Admin.WxBot.Http.TianXingService.GetBotReplyAsync(System.String,System.String,System.String)">
             <summary>
             获取机器人回复
@@ -1210,11 +1218,12 @@
             <param name="form">form</param>
             <returns></returns>
         </member>
-        <member name="M:HZY.Services.Admin.WxTimedTaskService.ExportExcelAsync(HZY.Models.Entities.WxTimedTask)">
+        <member name="M:HZY.Services.Admin.WxTimedTaskService.GetTaskSendContentAsync(System.String,System.Guid)">
             <summary>
-            导出Excel
+            获取定时任务发送内容
             </summary>
-            <param name="search"></param>
+            <param name="applicationToken">应用token</param>
+            <param name="taskId">定时任务id</param>
             <returns></returns>
         </member>
     </members>

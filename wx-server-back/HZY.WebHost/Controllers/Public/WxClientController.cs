@@ -33,12 +33,14 @@ public class WxClientController : ControllerBase
     private readonly WxSayEveryDayService _wxSayEveryDayService;
     private readonly WxKeywordReplyService _wxKeywordReplyService;
     private readonly TianXingService _tianXingService;
+    private readonly WxTimedTaskService _wxTimedTaskService;
     public WxClientController(WxContactService wxContactService,
         WxBotConfigService wxBotConfigService,
         IMemoryCache memoryCache,
         WxSayEveryDayService wxSayEveryDayService,
         WxKeywordReplyService wxKeywordReplyService,
-        TianXingService tianXingService)
+        TianXingService tianXingService,
+        WxTimedTaskService wxTimedTaskService)
     {
         _wxContactService = wxContactService;
         _wxBotConfigService = wxBotConfigService;
@@ -46,6 +48,7 @@ public class WxClientController : ControllerBase
         _wxSayEveryDayService = wxSayEveryDayService;
         _wxKeywordReplyService = wxKeywordReplyService;
         _tianXingService = tianXingService;
+        _wxTimedTaskService = wxTimedTaskService;
     }
 
     /// <summary>
@@ -105,7 +108,7 @@ public class WxClientController : ControllerBase
     /// <param name="applicationToken">应用token</param>
     /// <param name="keyword">关键词</param>
     /// <returns></returns>
-    [HttpGet("Keyword-reply/{applicationToken}")]
+    [HttpGet("keyword-reply/{applicationToken}")]
     public async Task<string> KeywordReplyAsync([FromRoute] string applicationToken, [FromQuery] string keyword)
     {
         return await this._wxKeywordReplyService.KeywordReply(applicationToken, keyword);
@@ -123,5 +126,17 @@ public class WxClientController : ControllerBase
     {
         WxBotConfig wxBotConfig = await _wxBotConfigService.GetWxBotConfigAsync(applicationToken);
         return await this._tianXingService.GetBotReplyAsync(wxBotConfig.TianXingApiKey, keyword, uniqueid);
+    }
+
+    /// <summary>
+    /// 获取定时任务发送内容
+    /// </summary>
+    /// <param name="applicationToken">应用token</param>
+    /// <param name="taskId">定时任务id</param>
+    /// <returns></returns>
+    [HttpGet("timed/send-content/{applicationToken}")]
+    public async Task<string> GetTaskSendContentAsync([FromRoute] string applicationToken, [FromQuery] Guid taskId)
+    {
+        return await this._wxTimedTaskService.GetTaskSendContentAsync(applicationToken, taskId);
     }
 }

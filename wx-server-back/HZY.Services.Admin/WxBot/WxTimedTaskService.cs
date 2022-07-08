@@ -17,6 +17,8 @@ using HZY.Models.Entities.Framework;
 using HZY.Services.Admin.Core;
 using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
+using HZY.Models.Enums;
+using HZY.Services.Admin.WxBot.Http;
 
 namespace HZY.Services.Admin
 {
@@ -26,10 +28,17 @@ namespace HZY.Services.Admin
     public class WxTimedTaskService : AdminBaseService<IAdminRepository<WxTimedTask>>
     {
         private readonly WxContactService _wxContactService;
-        public WxTimedTaskService(IAdminRepository<WxTimedTask> defaultRepository, WxContactService wxContactService)
+        private readonly IAdminRepository<WxBotConfig> _wxBotConfigRepository;
+        private readonly TianXingService _tianXingService;
+        public WxTimedTaskService(IAdminRepository<WxTimedTask> defaultRepository,
+            WxContactService wxContactService,
+            IAdminRepository<WxBotConfig> wxBotConfigRepository,
+           TianXingService tianXingService)
             : base(defaultRepository)
         {
             this._wxContactService = wxContactService;
+            _wxBotConfigRepository = wxBotConfigRepository;
+            _tianXingService = tianXingService;
         }
 
         /// <summary>
@@ -55,7 +64,7 @@ namespace HZY.Services.Admin
                         w.ReceivingObjectWxId,
                         w.ReceivingObjectName,
                         w.SendType,
-                        SendTypeText= w.SendType.ToDescriptionOrString(),
+                        SendTypeText = w.SendType.ToDescriptionOrString(),
                         w.SendContent,
                         w.SendTime,
                         w.ClosingRemarks,
@@ -113,14 +122,16 @@ namespace HZY.Services.Admin
         }
 
         /// <summary>
-        /// 导出Excel
+        /// 获取定时任务发送内容
         /// </summary>
-        /// <param name="search"></param>
+        /// <param name="applicationToken">应用token</param>
+        /// <param name="taskId">定时任务id</param>
         /// <returns></returns>
-        public async Task<byte[]> ExportExcelAsync(WxTimedTask search)
+        public async Task<string> GetTaskSendContentAsync(string applicationToken, Guid taskId)
         {
-            var tableViewModel = await this.FindListAsync(0, 0, search);
-            return this.ExportExcelByPagingView(tableViewModel, null, "Id");
+            WxTimedTask wxTimedTask = await this._defaultRepository.FindByIdAsync(taskId);
+            WxBotConfig wxBotConfig = await _wxBotConfigRepository.FindAsync(w => w.ApplicationToken == applicationToken);
+            return await _tianXingService.GetSendContentAsync(wxBotConfig.TianXingApiKey, (wxTimedTask.SendType, wxTimedTask.SendContent));
         }
 
 

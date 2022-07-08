@@ -133,15 +133,15 @@ namespace HZY.Services.Admin
             string loveWords = await _tianXingService.GetLoveWordsAsync(wxBotConfig.TianXingApiKey);
             //计算在一起多少天
             int days = (DateTime.Now.Date - wxSayEveryDay.AnniversaryDay.Date).Days;
-            string result = $"{DateTime.Now:yyyy-MM-dd HH:mm} 星期二{ToWeek(DateTime.Now.DayOfWeek)}\n 今天是我们在一起的第{days}天" +
-                $"\n元气满满的一天开始啦,要开心噢^_^" +
+            string result = $"{DateTime.Now:yyyy-MM-dd HH:mm} {ToWeek(DateTime.Now.DayOfWeek)}\n\n宝贝,今天是我们在一起的第{days}天啦" +
+                $"\n\n元气满满的一天开始啦,要开心噢^_^" +
                 $"\n\n今日天气" +
                 $"\n{weather}" +
                 $"\n\n每日一句" +
                 $"\n{dayOne}" +
                 $"\n\n情话对你说" +
                 $"\n{loveWords}" +
-                $"\n————————{wxSayEveryDay.ClosingRemarks}";
+                $"\n\n————————{wxSayEveryDay.ClosingRemarks}";
             return result;
         }
 

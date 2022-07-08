@@ -129,35 +129,16 @@ namespace HZY.Services.Admin
                 WxKeywordReply jqReply = keywordReplys.FirstOrDefault(w => w.MatchType == EMatchType.JINGQUE);
                 if (jqReply != null)
                 {
-                    return await Reply(wxBotConfig.TianXingApiKey, jqReply);
+                    return await _tianXingService.GetSendContentAsync(wxBotConfig.TianXingApiKey, (jqReply.SendType, jqReply.SendContent));
                 }
                 else
                 {
                     WxKeywordReply mhReply = keywordReplys.FirstOrDefault(w => w.MatchType == EMatchType.MOHU);
-                    return await Reply(wxBotConfig.TianXingApiKey, mhReply);
+                    return await _tianXingService.GetSendContentAsync(wxBotConfig.TianXingApiKey, (mhReply.SendType, mhReply.SendContent));
                 }
             }
             return null;
 
-        }
-
-        private async Task<string> Reply(string tianxingKey, WxKeywordReply reply)
-        {
-            switch (reply.SendType)
-            {
-                case ETimedTaskSendType.WBNR:
-                    return reply.SendContent;
-                case ETimedTaskSendType.XWZX:
-                    return await _tianXingService.GetNewsAsync(tianxingKey);
-                case ETimedTaskSendType.GSDQ:
-                    return await _tianXingService.GetStoryAsync(tianxingKey);
-                case ETimedTaskSendType.TWQH:
-                    return await _tianXingService.GetLoveWordsAsync(tianxingKey);
-                case ETimedTaskSendType.XHDQ:
-                    return await _tianXingService.GetJokesAsync(tianxingKey);
-                default:
-                    return "你太厉害了，说的话把我难倒了，我要去学习了，不然没法回答你的问题";
-            }
         }
     }
 }

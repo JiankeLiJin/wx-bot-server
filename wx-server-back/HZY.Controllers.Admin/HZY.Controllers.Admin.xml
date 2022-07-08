@@ -856,12 +856,5 @@
             <param name="form">form</param>
             <returns></returns>
         </member>
-        <member name="M:HZY.Controllers.Admin.WxTimedTaskController.ExportExcelAsync(HZY.Models.Entities.WxTimedTask)">
-            <summary>
-            导出Excel
-            </summary>
-            <param name="search"></param>
-            <returns></returns>
-        </member>
     </members>
 </doc>
