@@ -379,7 +379,7 @@ async function startSayEveryDay(sayEveryDays) {
           return;
         }
         //获取接收人
-        let receivingwxIds = sayEveryDay.receivingObjectwxId.split(',');
+        let receivingwxIds = sayEveryDay.receivingObjectWxId.split(',');
         let receivingWxNames = sayEveryDay.receivingObjectName.split(',');
         //循环发送消息
         // @ts-ignore
@@ -413,7 +413,7 @@ async function startTimedTask(timedTasks) {
           return;
         }
         //获取接收人
-        let receivingwxIds = task.receivingObjectwxId.split(',');
+        let receivingwxIds = task.receivingObjectWxId.split(',');
         let receivingWxNames = task.receivingObjectName.split(',');
         //循环发送消息
         // @ts-ignore
