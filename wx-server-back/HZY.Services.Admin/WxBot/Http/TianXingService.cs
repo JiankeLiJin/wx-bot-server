@@ -206,7 +206,7 @@ namespace HZY.Services.Admin.WxBot.Http
                 newsText.AppendLine($"{DateTime.Now:yyyy-MM-dd HH:mm} {Tools.GetWeekByDate(DateTime.Now)}\n");
                 for (int i = 0; i < jObject["newslist"].Count(); i++)
                 {
-                    newsText.AppendLine($"{i}、{jObject["newslist"][i]["word"].ToString()}");
+                    newsText.AppendLine($"{i + 1}、{jObject["newslist"][i]["title"].ToString()}");
                 }
                 newsText.AppendLine($"新闻详情查看：https://www.tianapi.com/weixin/news/?col={col}");
                 return newsText.ToString();

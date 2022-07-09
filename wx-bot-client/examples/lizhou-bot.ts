@@ -217,30 +217,30 @@ async function handleRecvMsg(j) {
       await puppet.sidecar.sendMsg(j.wxId, `配置更新成功`);
     }
 
-    if (content.indexOf("关闭私聊") > -1) {
-      if (privateChatwxIds.includes(j.wxId)) {
-        privateChatwxIds.splice(privateChatwxIds.indexOf(j.wxId), 1);
-        console.log(`${j.wxId}私聊已关闭`);
-        // @ts-ignore
-        await puppet.sidecar.sendMsg(j.wxId, "好的,不聊了!");
-        return;
-      }
-    }
-    if (content.indexOf("开启私聊") > -1) {
-      //判断平台是否开启了私聊
-      // @ts-ignore
-      if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 0) {
-        // @ts-ignore
-        await puppet.sidecar.sendMsg(j.wxId, "主人设置不允许和你聊天了!");
-        return;
-      }
-      if (!privateChatwxIds.includes(j.wxId)) {
-        privateChatwxIds.push(j.wxId);
-        console.log(`${j.wxId}私聊已开启`);
-      }
-    }
+    // if (content.indexOf("关闭私聊") > -1) {
+    //   if (privateChatwxIds.includes(j.wxId)) {
+    //     privateChatwxIds.splice(privateChatwxIds.indexOf(j.wxId), 1);
+    //     console.log(`${j.wxId}私聊已关闭`);
+    //     // @ts-ignore
+    //     await puppet.sidecar.sendMsg(j.wxId, "好的,不聊了!");
+    //     return;
+    //   }
+    // }
+    // if (content.indexOf("开启私聊") > -1) {
+    //   //判断平台是否开启了私聊
+    //   // @ts-ignore
+    //   if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 0) {
+    //     // @ts-ignore
+    //     await puppet.sidecar.sendMsg(j.wxId, "主人设置不允许和你聊天了!");
+    //     return;
+    //   }
+    //   if (!privateChatwxIds.includes(j.wxId)) {
+    //     privateChatwxIds.push(j.wxId);
+    //     console.log(`${j.wxId}私聊已开启`);
+    //   }
+    // }
     // @ts-ignore
-    if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 1 && privateChatwxIds.includes(j.wxId)) {
+    if (botConfig.wxBotConfig.talkPrivateAutoReplyFlag == 1) {
       //获取关键字回复
       let replyContent = await getKeywordReply(content);
       if (replyContent != null) {
