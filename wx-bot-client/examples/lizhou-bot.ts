@@ -42,7 +42,7 @@ let botConfig = {
   sayEveryDays: [],
 };
 /**本地开启私聊的微信id */
-let privateChatwxIds: any[] = [];
+// let privateChatwxIds: any[] = [];
 
 //正在运行的定时任务名称
 let runScheduleNames: any[] = [];
@@ -215,6 +215,7 @@ async function handleRecvMsg(j) {
       await reloadConfig();
       // @ts-ignore
       await puppet.sidecar.sendMsg(j.wxId, `配置更新成功`);
+      return;
     }
 
     // if (content.indexOf("关闭私聊") > -1) {
