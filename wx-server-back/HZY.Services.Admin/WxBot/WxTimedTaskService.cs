@@ -134,7 +134,8 @@ namespace HZY.Services.Admin
         {
             WxTimedTask wxTimedTask = await this._defaultRepository.FindByIdAsync(taskId);
             WxBotConfig wxBotConfig = await _wxBotConfigRepository.FindAsync(w => w.ApplicationToken == applicationToken);
-            return await _tianXingService.GetSendContentAsync(wxBotConfig.TianXingApiKey, (wxTimedTask.SendType, wxTimedTask.SendContent));
+            string content = await _tianXingService.GetSendContentAsync(wxBotConfig.TianXingApiKey, (wxTimedTask.SendType, wxTimedTask.SendContent));
+            return $"{content}\n\n————————{wxTimedTask.ClosingRemarks}";
         }
 
 

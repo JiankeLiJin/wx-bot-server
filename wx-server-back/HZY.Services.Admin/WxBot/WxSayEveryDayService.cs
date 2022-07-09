@@ -142,7 +142,7 @@ namespace HZY.Services.Admin
             string loveWords = await _tianXingService.GetLoveWordsAsync(wxBotConfig.TianXingApiKey);
             //计算在一起多少天
             int days = (DateTime.Now.Date - wxSayEveryDay.AnniversaryDay.Date).Days;
-            string result = $"{DateTime.Now:yyyy-MM-dd HH:mm} {ToWeek(DateTime.Now.DayOfWeek)}\n\n宝贝,今天是我们在一起的第{days}天啦" +
+            string result = $"{DateTime.Now:yyyy-MM-dd HH:mm} {Tools.GetWeekByDate(DateTime.Now)}\n\n宝贝,今天是我们在一起的第{days}天啦" +
                 $"\n\n元气满满的一天开始啦,要开心噢^_^" +
                 $"\n\n今日天气" +
                 $"\n{weather}" +
@@ -153,36 +153,5 @@ namespace HZY.Services.Admin
                 $"\n\n————————{wxSayEveryDay.ClosingRemarks}";
             return result;
         }
-
-        private string ToWeek(DayOfWeek weekName)
-        {
-            string week = "";
-            switch (weekName)
-            {
-                case DayOfWeek.Sunday:
-                    week = "星期日";
-                    break;
-                case DayOfWeek.Monday:
-                    week = "星期一";
-                    break;
-                case DayOfWeek.Tuesday:
-                    week = "星期二";
-                    break;
-                case DayOfWeek.Wednesday:
-                    week = "星期三";
-                    break;
-                case DayOfWeek.Thursday:
-                    week = "星期四";
-                    break;
-                case DayOfWeek.Friday:
-                    week = "星期五";
-                    break;
-                case DayOfWeek.Saturday:
-                    week = "星期五";
-                    break;
-            }
-            return week;
-        }
-
     }
 }
