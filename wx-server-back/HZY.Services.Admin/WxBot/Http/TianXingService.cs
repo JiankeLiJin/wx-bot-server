@@ -19,7 +19,7 @@ namespace HZY.Services.Admin.WxBot.Http
         private const string defaultLoveWords = "如果我会隐身就好了，那我一定藏在你的枕头里，藏在十二月的风里，藏在你的口袋里。";
         private const string defaultDayOne = "有时候，没有下一次，没有机会重来，没有暂停继续。有时候，错过了现在，就永远永远的没机会了。";
         private const string defaultNews = "暂时没有新闻哦";
-        private const string defaultWeather = "暂时没有新闻哦";
+        private const string defaultWeather = "天气预报失踪了";
         private const string defaultStory = "乌鸦站在高大的树枝上，整天无所事事，悠哉游哉好不快活。一只小兔子看见了，心中非常羡慕，就问乌鸦：“乌鸦大哥，你这么自在逍遥，真好呀，我能不能跟你一样，也整天呆着不做事？”乌鸦回答：“当然行，为什么不呢...";
         private const string defaultJokes = "校长在学期结束时的校务会议上，对人事行政效率之低，大发雷霆。他说：“负责董事业务的不懂事；负责人事管理的不省人事；身为干事的又不干事！”";
         private const string defaultBotReply = "你太厉害了，说的话把我难倒了，我要去学习了，不然没法回答你的问题";
