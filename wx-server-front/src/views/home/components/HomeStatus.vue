@@ -2,13 +2,13 @@
   <a-card class="home-status" :bordered="false" hoverable :headStyle="headStyle">
     <template #title>
       微秘书状态
-      <a-tag :color="wxId ? '#87d068' : '#6a615d'">{{ wxId ? '在线' : '离线' }}</a-tag>
+      <a-tag :color="state.wxUserInfo.wxId ? '#87d068' : '#6a615d'">{{ state.wxUserInfo.wxId ? '在线' : '离线' }}</a-tag>
     </template>
     <div class="content">
-      <a-image :width="150" :preview="false" :src="avatarUrl" />
+      <a-image :width="150" :preview="false" :src="state.wxUserInfo.avatarUrl" />
       <div class="content-info">
-        <div class="name">{{ wxName }}</div>
-        <div class="vx-code">微信Code：{{ wxCode }}</div>
+        <div class="name">{{ state.wxUserInfo.wxName }}</div>
+        <div class="vx-code">微信Code：{{ state.wxUserInfo.wxCode }}</div>
       </div>
     </div>
   </a-card>

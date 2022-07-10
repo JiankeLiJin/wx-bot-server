@@ -1,4 +1,5 @@
-﻿using HZY.Models.Enums;
+﻿using HZY.Infrastructure;
+using HZY.Models.Enums;
 using HZY.Models.VO.TianXing;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -202,13 +203,14 @@ namespace HZY.Services.Admin.WxBot.Http
                 var jObject = await GetAsync("/allnews/index", parmars);
                 if (jObject == null) return defaultNews;
                 StringBuilder newsText = new();
+                newsText.AppendLine($"{DateTime.Now:yyyy-MM-dd HH:mm} {Tools.GetWeekByDate(DateTime.Now)}\n");
                 for (int i = 0; i < jObject["newslist"].Count(); i++)
                 {
-                    newsText.AppendLine($"{i}、{jObject["newslist"][i]["title"].ToString()}");
+                    newsText.AppendLine($"{i + 1}、{jObject["newslist"][i]["title"].ToString()}");
                 }
+                newsText.AppendLine($"新闻详情查看：https://www.tianapi.com/weixin/news/?col={col}");
                 return newsText.ToString();
 
-                //拼装新闻
             }
             catch (Exception ex)
             {

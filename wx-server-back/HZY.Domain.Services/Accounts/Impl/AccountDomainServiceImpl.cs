@@ -152,9 +152,10 @@ public class AccountDomainServiceImpl : IAccountDomainService
     {
         if (string.IsNullOrEmpty(oldPassword)) MessageBox.Show("旧密码不能为空！");
         if (string.IsNullOrEmpty(newPassword)) MessageBox.Show("新密码不能为空！");
+        oldPassword = Tools.Md5Encrypt(oldPassword);
         var sysUser = await this._sysUserRepository.FindByIdAsync(this.GetAccountInfo().Id);
         if (sysUser.Password != oldPassword) MessageBox.Show("旧密码不正确！");
-        sysUser.Password = newPassword;
+        sysUser.Password = Tools.Md5Encrypt(newPassword);
         this.DeleteCacheAccountInfoById(sysUser.Id.ToString());
         return await this._sysUserRepository.UpdateAsync(sysUser);
     }

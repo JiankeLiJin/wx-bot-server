@@ -76,6 +76,7 @@
   "dependencies": {
     "cuid": "^2.1.8",
     "node-schedule": "^2.1.0",
+    "node-windows": "^1.0.0-beta.7",
     "request-promise": "^4.2.6",
     "sidecar": "^0.17.8",
     "ws": "^8.8.0",

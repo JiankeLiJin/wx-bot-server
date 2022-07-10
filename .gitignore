@@ -176,6 +176,7 @@ ClientBin/
 *.publishsettings
 node_modules/
 orleans.codegen.cs
+dist/
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -229,3 +230,4 @@ HC-admin-clientapp/dist/
 .vscode/launch.json
 
 .vscode/tasks.json
+
