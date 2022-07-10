@@ -23,7 +23,7 @@ RUN dotnet build "HZY.WebHost.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "HZY.WebHost.csproj" -c Release -o /app/publish
 #解决docker容器时间市区差八小时问题
-RUN echo "Asia/Shanghai" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
 FROM base AS final
 WORKDIR /app
