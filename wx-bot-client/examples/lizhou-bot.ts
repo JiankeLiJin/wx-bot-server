@@ -27,7 +27,6 @@ import qrcodeTerminal from 'qrcode-terminal'
 import schedule from 'node-schedule'
 // @ts-ignore
 import rp from 'request-promise'
-import { random } from 'faker'
 
 
 
@@ -53,7 +52,7 @@ let runScheduleNames: any[] = [];
 * @type {string}
 */
 const WECHAT_URL = 'http://47.102.105.169:9901/api/public/wx-client';// 服务器host
-const APPLICTION_TOKEN = "08da623d-1b3d-4768-82ac-c37fa4e7e3d1";//平台KEY
+const APPLICTION_TOKEN = "xxxxx";//平台KEY 自行修改
 
 const apologizeTextArr = [
   "有一天芋泥和啵啵吵架了，芋泥气得离家出走了，奶茶觉得啵啵很过分就跟他私奔了，只剩下一个啵啵，所以这个啵啵你是要还是不要呀。",
