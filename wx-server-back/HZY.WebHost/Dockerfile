@@ -29,5 +29,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENV ASPNETCORE_URLS=http://+:9901
 #解决docker容器时间市区差八小时问题
-RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+RUN echo "Asia/shanghai" > /etc/timezone
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 ENTRYPOINT ["dotnet", "HZY.WebHost.dll"]
