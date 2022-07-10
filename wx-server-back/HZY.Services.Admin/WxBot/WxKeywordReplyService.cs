@@ -19,6 +19,7 @@ using HZY.Services.Admin.Framework;
 using HZY.EFCore.Repositories.Admin.Core;
 using HZY.Services.Admin.WxBot.Http;
 using HZY.Models.Enums;
+using HZY.Models.BO;
 
 namespace HZY.Services.Admin
 {
@@ -29,13 +30,16 @@ namespace HZY.Services.Admin
     {
         private readonly TianXingService _tianXingService;
         private readonly IAdminRepository<WxBotConfig> _wxBotConfigRepository;
+        private readonly AccountInfo _accountInfo;
         public WxKeywordReplyService(IAdminRepository<WxKeywordReply> defaultRepository,
             TianXingService tianXingService,
-              IAdminRepository<WxBotConfig> wxBotConfigRepository)
+              IAdminRepository<WxBotConfig> wxBotConfigRepository,
+              IAccountDomainService accountService)
             : base(defaultRepository)
         {
             _tianXingService = tianXingService;
             _wxBotConfigRepository = wxBotConfigRepository;
+            _accountInfo= accountService.GetAccountInfo();
         }
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace HZY.Services.Admin
         {
             var query = this._defaultRepository.Select
                     .OrderByDescending(w => w.CreationTime)
+                    .Where(w => w.ApplicationToken.Equals(_accountInfo.Id.ToStr()))
                     .Select(w => new
                     {
                         w.Id,

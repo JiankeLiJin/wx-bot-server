@@ -27,6 +27,7 @@ import qrcodeTerminal from 'qrcode-terminal'
 import schedule from 'node-schedule'
 // @ts-ignore
 import rp from 'request-promise'
+import { random } from 'faker'
 
 
 
@@ -52,7 +53,31 @@ let runScheduleNames: any[] = [];
 * @type {string}
 */
 const WECHAT_URL = 'http://47.102.105.169:9901/api/public/wx-client';// 服务器host
-const APPLICTION_TOKEN = "08da5d97-da10-498f-881f-4eb6f415f76a";//平台KEY
+const APPLICTION_TOKEN = "08da623d-1b3d-4768-82ac-c37fa4e7e3d1";//平台KEY
+
+const apologizeTextArr = [
+  "有一天芋泥和啵啵吵架了，芋泥气得离家出走了，奶茶觉得啵啵很过分就跟他私奔了，只剩下一个啵啵，所以这个啵啵你是要还是不要呀。",
+  "有一天，小熊在洗衣服\n可是有一个地方怎么也洗不干净\n熊妈妈说：你认真搓\n小熊红着眼睛说：我搓了我搓了",
+  "从前有只小鸭子，到牧场果园玩儿，走着走着就口渴了，抬头看到头上的梨树，奈何够不着，就一直念叨，想梨鸭，想梨鸭，想梨鸭。",
+  "我欠你五块，你还我十块，我倒欠。",
+  "有一个菠萝去理发，它坐了很久理发师一直不给它理发，它就说:“你理理我叭！”",
+  "不要冷战了好吗，你再不理我，我就变成狗不理了",
+  "我是一个麻将，开心的时候吃，不开心的时候杠，你惹我生气的时候，我就大喊一声： “我胡（服）了你啦”",
+  "有一天鸭鸭陪女朋友去逛街，街上很拥挤，鸭鸭慌乱中握住了一只手，结果不是她的女朋友。于是鸭鸭很慌乱的说：“握错了鸭，握错了鸭。”了",
+  "有天兔兔种了一颗草莓和芒果，发现草莓长的好慢，兔兔就说：莓你不行啊，莓你不行啊，你听到了吗？没你不行啊！",
+  "有一次我在看月亮，这个月亮又圆，又亮又圆又亮，圆亮啊圆亮，原谅。",
+  "蔬菜们在举办比瘦大赛 茄子看到了黄瓜 发现黄瓜的腰很细 于是茄子一直在嘀嘀咕咕：没瓜细呀 没瓜细呀 没关系~",
+  "首项加未项的和乘项数除以二\n干嘛?\求和呀",
+  "有一天一颗芦荟看到泥地里有一颗莴苣\n芦荟就想，为啥莴苣不能养在花盆里\n然后芦荟恍然大悟\n因为莴爱泥呀（我爱你）",
+  "♀️ ♂️好吧、坏吧、随便吧是三个好朋友 ☎️有一天随便吧打电话给坏吧.约他一起出去玩,坏吧说:还有有谁啊,随便吧说：我们和好吧",
+  "有一天鸭鸭 去买生蚝,回家的路上生蚝全都跳下袋子钻到了泥土里,原来这就叫蚝喜欢泥~好喜欢你~",
+  "你别跟我吵架了，我不跟这么好看的人吵架",
+  "有一天m和n吵架了，最后m道歉了，因为m sorry",
+  "我是一个糊涂虫一个小笨蛋，但是请你相信，我不是故意惹你生气的",
+  "您好，我是快乐警察，请您配合我的工作，现在我要抓走你所有的不开心",
+  "有一个菠萝去理发，它坐了很久理发师一直不给它理发，它就说:“你理理我叭！”",
+  "一只小企鹅啪唧一下摔倒了，一只小小鸟叽叽喳喳的嘲笑它：“你是不是打算爬一辈子啊，还不起来”，小企鹅气呼呼的说：“对，不起！”。",
+];
 
 /**
  *
@@ -172,6 +197,19 @@ async function handleRecvMsg(j) {
       //是否开启群聊自动回复
       // @ts-ignore
       if (botConfig.wxBotConfig.groupAutoReplyFlag == 1) {
+        if (content.indexOf("启动道歉模式") > -1 && j.wxId == "wxid_tqwjgv8ux9ka22") {
+          // @ts-ignore
+          const babyNick = await puppet.sidecar.getChatroomMemberNickInfo("lnc98123456", j.room);
+          //随机获取五个道歉语录
+          let randomApologizeTextArr = apologizeTextArr.sort(() => Math.random() > 0.5 ? -1 : 1).slice(0, 5);
+          randomApologizeTextArr.forEach((apologize, index) => {
+            setTimeout(async () => {
+              // @ts-ignore
+              await puppet.sidecar.sendAtMsg(j.room, `@${babyNick} ${apologize}`, "lnc98123456");
+            }, (index + 1) * 4000)
+          })
+          return;
+        }
         // @ts-ignore
         const nick = await puppet.sidecar.getChatroomMemberNickInfo(j.wxId, j.room);
         if (content == null || content == '') {
@@ -186,7 +224,7 @@ async function handleRecvMsg(j) {
             + "9.舔狗日记(发送“舔狗”，随机返回一个舔狗日记)\n"
             + "10.彩虹屁(发送“彩虹屁”，随机返回一个彩虹屁句子)\n\n";
           // @ts-ignore
-          await puppet.sidecar.sendAtMsg(j.room, `@${nick} ${content}`,j.wxId);
+          await puppet.sidecar.sendAtMsg(j.room, `@${nick} ${content}`, j.wxId);
         } else {
           //获取关键字回复
           let replyContent = await getKeywordReply(content);
@@ -327,7 +365,7 @@ async function updateContacts() {
   // @ts-ignore
   const contacts = JSON.parse(await puppet.sidecar.getContact())
   console.log(`联系人有${contacts.length}个`);
-  let res = await PostRequest(WECHAT_URL + `/contacts/${APPLICTION_TOKEN}`, contacts.map((c:any) => ({
+  let res = await PostRequest(WECHAT_URL + `/contacts/${APPLICTION_TOKEN}`, contacts.map((c: any) => ({
     wxId: c.id,
     wxCode: c.code,
     name: c.name,

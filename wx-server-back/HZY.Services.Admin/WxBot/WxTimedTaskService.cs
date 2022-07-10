@@ -21,6 +21,7 @@ using HZY.Models.Enums;
 using HZY.Services.Admin.WxBot.Http;
 using HZY.Infrastructure.ApiResultManage;
 using Quartz;
+using HZY.Models.BO;
 
 namespace HZY.Services.Admin
 {
@@ -32,15 +33,18 @@ namespace HZY.Services.Admin
         private readonly WxContactService _wxContactService;
         private readonly IAdminRepository<WxBotConfig> _wxBotConfigRepository;
         private readonly TianXingService _tianXingService;
+        private readonly AccountInfo _accountInfo;
         public WxTimedTaskService(IAdminRepository<WxTimedTask> defaultRepository,
             WxContactService wxContactService,
             IAdminRepository<WxBotConfig> wxBotConfigRepository,
-           TianXingService tianXingService)
+           TianXingService tianXingService,
+           IAccountDomainService accountService)
             : base(defaultRepository)
         {
             this._wxContactService = wxContactService;
             _wxBotConfigRepository = wxBotConfigRepository;
             _tianXingService = tianXingService;
+            _accountInfo = accountService.GetAccountInfo();
         }
 
         /// <summary>
@@ -59,6 +63,7 @@ namespace HZY.Services.Admin
 
             var query = this._defaultRepository.Select
                     .OrderByDescending(w => w.CreationTime)
+                     .Where(w => w.ApplicationToken.Equals(_accountInfo.Id.ToStr()))
                     .Select(w => new
                     {
                         w.Id,
