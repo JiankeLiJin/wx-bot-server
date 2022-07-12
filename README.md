@@ -16,9 +16,9 @@ wx-bot-client是机器人客户端
 需要可以联系作者(qq:1021907330)开通账号
 
 ## 使用方法:
-1.登录管理平台 申请天行数据秘钥，填入基础配置中进行保存。
-2.安装node16+ 环境，配置好环境变量
-3.修改客户端的应用token，文件地址wx-bot-client/examples/lizhou-bot.ts
+1. 登录管理平台 申请天行数据秘钥，填入基础配置中进行保存。
+2. 安装node16+ 环境，配置好环境变量
+3. 修改客户端的应用token，文件地址wx-bot-client/examples/lizhou-bot.ts
 ![输入图片说明](doc/image.png)
 登录指定版本微信登录后，启动机器人客户端即可
 客户端下载地址:https://share.weiyun.com/2ZRdnk7r
