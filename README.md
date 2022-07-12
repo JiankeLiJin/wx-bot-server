@@ -23,6 +23,8 @@ wx-bot-client是机器人客户端
 登录指定版本微信登录后，启动机器人客户端即可
 客户端下载地址:https://share.weiyun.com/2ZRdnk7r
 
+ **后台修改配置后，可以给自己的机器人微信发送“更新配置”关键字，机器人会自动重新拉取最新配置** 
+
 
 ## 后台配置页面展示：
 ![image](https://user-images.githubusercontent.com/59723463/178428935-9088d119-7a03-41af-b60a-a7cc76607150.png)
